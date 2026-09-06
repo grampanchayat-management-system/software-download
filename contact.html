@@ -92,24 +92,12 @@
 </footer>
 
 <script>
-// ── तक्रारी थेट GitHub Issues मध्ये साठवल्या जातात — Web3Forms सारखी कुठलीही मोफत-मर्यादा
-// (250/महिना) इथे नाही; GitHub च्या मोफत मर्यादेत (साधारण तासाला हजारो रिक्वेस्ट) सहज बसतं.
-// फोटो असल्यास तो आधी याच Repo मध्ये अपलोड होतो आणि तक्रारीत आपोआप embed होतो — त्यामुळे
-// आता WhatsApp वर वेगळं फोटो पाठवायची गरजच उरत नाही.
-//
-// ── सेटअप (एकदाच करायचं) ──
-// 1) GitHub वर एक (Private ठेवलं तरी चालेल) Repository तयार करा — तिथेच या तक्रारी Issues
-//    म्हणून जमा होतील. खाली GH_REPO मध्ये "username/reponame" असं टाका.
-// 2) GitHub → Settings → Developer settings → Fine-grained tokens → नवीन टोकन तयार करा.
-//    त्या Repo साठी "Issues: Read & write" आणि "Contents: Read & write" (फोटोसाठी) परवानगी द्या.
-// 3) ⚠️ टोकन इथे थेट (plain) टाकू नका — GitHub त्याला लगेच ओळखून रद्द करतं (Secret Scanning).
-//    त्याऐवजी तुमच्या ब्राउझरच्या Console मध्ये (F12) खालची ओळ चालवा — तुमचा token तिथेच टाका,
-//    कुठेही पाठवला जात नाही:
-//      Array.from("इथे-तुमचा-token-टाका").map(c=>c.charCodeAt(0)+7)
-//    जो [123,45,67,...] असा आकडेवारीचा Array मिळेल, तो खाली GH_TOKEN_CODES मध्ये चिकटवा.
-var GH_REPO = 'तुमचेusername/तुमचे-repo';
-var GH_TOKEN_CODES = [/* इथे वरच्या पद्धतीने मिळालेला Array टाका */];
-var GH_TOKEN = GH_TOKEN_CODES.map(function(c){return String.fromCharCode(c-7);}).join('');
+// ── तक्रारी थेट WhatsApp वर पाठवल्या जातात ──
+// कोणताही टोकन, बॅकएंड किंवा सर्व्हरची गरज नाही. फॉर्म भरून सबमिट केल्यावर
+// संपूर्ण माहिती असलेला WhatsApp मेसेज आपोआप तयार होतो आणि तुमच्या (मालकाच्या)
+// WhatsApp नंबरवर चॅट उघडते — वापरकर्त्याने फक्त "Send" दाबायचं असतं.
+// खालचा नंबर बदलून तुमचा WhatsApp नंबर (देश कोडसह, + शिवाय) टाका.
+var WA_NUMBER = '917990947511';
 
 var photoInput=document.getElementById('c-photo');
 var photoDrop=document.getElementById('photoDrop');
@@ -125,29 +113,6 @@ photoInput.addEventListener('change',function(){
   }
 });
 
-function fileToBase64(file){
-  return new Promise(function(resolve,reject){
-    var r=new FileReader();
-    r.onload=function(){resolve(r.result.split(',')[1]);};
-    r.onerror=reject;
-    r.readAsDataURL(file);
-  });
-}
-
-// फोटो आधी Repo मध्ये अपलोड करून त्याची raw URL परत देतो (अपलोड अयशस्वी झाल्यास null — तक्रार तरीही जाईल)
-function uploadPhoto(file){
-  return fileToBase64(file).then(function(b64){
-    var path='complaint-photos/'+Date.now()+'-'+file.name.replace(/[^a-zA-Z0-9.\-]/g,'_');
-    return fetch('https://api.github.com/repos/'+GH_REPO+'/contents/'+path,{
-      method:'PUT',
-      headers:{'Authorization':'token '+GH_TOKEN,'Accept':'application/vnd.github+json'},
-      body:JSON.stringify({message:'तक्रार फोटो अपलोड',content:b64})
-    }).then(function(r){return r.json();}).then(function(data){
-      return (data.content && data.content.download_url) ? data.content.download_url : null;
-    }).catch(function(){return null;});
-  });
-}
-
 document.getElementById('complaintForm').addEventListener('submit',function(e){
   e.preventDefault();
   var msg=document.getElementById('formMsg');
@@ -158,40 +123,26 @@ document.getElementById('complaintForm').addEventListener('submit',function(e){
   var desc=document.getElementById('c-desc').value.trim();
   var photoFile=photoInput.files&&photoInput.files[0];
 
-  if(!GH_REPO||!GH_TOKEN_CODES.length){
-    msg.className='form-msg err';
-    msg.textContent='⚠️ तक्रार फॉर्म अजून सुरू केलेला नाही. कृपया थेट फोन/WhatsApp करा.';
-    return;
-  }
-
   btn.disabled=true;btn.textContent='पाठवत आहे…';
   msg.className='form-msg';msg.style.display='none';
 
-  var photoStep=photoFile?uploadPhoto(photoFile):Promise.resolve(null);
+  var text='*नवीन तक्रार*\n'+
+    '👤 नाव: '+name+'\n'+
+    '🏠 गाव/ग्रामपंचायत: '+village+'\n'+
+    '📞 मोबाईल: '+phone+'\n\n'+
+    '📝 तक्रार:\n'+desc+
+    (photoFile?'\n\n📷 (फोटो निवडला होता — कृपया तो या चॅटमध्ये स्वतंत्रपणे जोडून पाठवा)':'');
 
-  photoStep.then(function(photoUrl){
-    var body='**नाव:** '+name+'\n**गाव/ग्रामपंचायत:** '+village+'\n**मोबाईल:** '+phone+
-      '\n\n'+desc+(photoUrl?('\n\n![तक्रार फोटो]('+photoUrl+')'):(photoFile?'\n\n_(फोटो अपलोड करता आला नाही)_':''));
-    return fetch('https://api.github.com/repos/'+GH_REPO+'/issues',{
-      method:'POST',
-      headers:{'Authorization':'token '+GH_TOKEN,'Accept':'application/vnd.github+json','Content-Type':'application/json'},
-      body:JSON.stringify({title:'तक्रार — '+village+' — '+name,body:body,labels:['तक्रार']})
-    });
-  }).then(function(res){
-    if(!res.ok)throw new Error('failed');
-    return res.json();
-  }).then(function(){
-    btn.disabled=false;btn.textContent='📩 तक्रार पाठवा';
-    msg.className='form-msg ok';msg.textContent='✅ तक्रार यशस्वीरित्या नोंदवली गेली. लवकरच संपर्क केला जाईल.';
-    document.getElementById('complaintForm').reset();
-    photoDrop.classList.remove('has-file');
-    photoDrop.childNodes[0].textContent='📷 फोटो निवडण्यासाठी येथे क्लिक करा';
-    photoFlowNote.style.display='none';
-  }).catch(function(err){
-    btn.disabled=false;btn.textContent='📩 तक्रार पाठवा';
-    msg.className='form-msg err';msg.textContent='❌ तक्रार पाठवता आली नाही. कृपया थेट फोन/WhatsApp करा.';
-    console.error(err);
-  });
+  var waUrl='https://wa.me/'+WA_NUMBER+'?text='+encodeURIComponent(text);
+  window.open(waUrl,'_blank');
+
+  btn.disabled=false;btn.textContent='📩 तक्रार पाठवा';
+  msg.className='form-msg ok';
+  msg.textContent='✅ WhatsApp उघडत आहे — तिथे "Send" दाबून तक्रार पाठवा.'+(photoFile?' फोटो चॅटमध्ये जोडायला विसरू नका.':'');
+  document.getElementById('complaintForm').reset();
+  photoDrop.classList.remove('has-file');
+  photoDrop.childNodes[0].textContent='📷 फोटो निवडण्यासाठी येथे क्लिक करा';
+  photoFlowNote.style.display='none';
 });
 </script>
 </body>
