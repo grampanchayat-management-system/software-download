@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="mr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Download — ग्रामपंचायत सॉफ्टवेअर</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="letterhead">
+  <div class="wrap">
+    <div class="brand"><span class="seal">🏛️</span> ग्रामपंचायत सॉफ्टवेअर</div>
+    <div class="nav-tabs">
+      <a href="index.html">होम</a>
+      <a href="features.html">वैशिष्ट्ये</a>
+      <a href="download.html" class="active">Download</a>
+      <a href="guide.html">मार्गदर्शन</a>
+      <a href="pricing.html">किंमत</a>
+      <a href="contact.html">संपर्क / तक्रार</a>
+    </div>
+  </div>
+</div>
+
+<section class="hero" style="padding:56px 0 50px">
+  <div class="wrap">
+    <div class="eyebrow-line"></div>
+    <h1 style="font-size:clamp(26px,3.8vw,38px)">सॉफ्टवेअर Download करा</h1>
+    <p class="tag">खालील फाईल याच वेबसाईटवर ठेवलेली आहे — थेट डाउनलोड होईल.</p>
+  </div>
+</section>
+
+<section class="block">
+  <div class="wrap">
+    <div class="dl-list">
+      <div class="dl-item">
+        <div class="info">
+          <b>Grampanchayat Software — Setup.exe</b>
+          <span>Windows 10/11 • आवृत्ती 1.0</span>
+        </div>
+        <a class="btn btn-primary" id="downloadBtn" href="#" style="padding:10px 20px;font-size:13.5px">⬇️ Download</a>
+      </div>
+    </div>
+    <div class="block-head" style="margin-top:40px;margin-bottom:0">
+      <p>Install कसं करायचं व वापर कसा सुरू करायचा — <a class="link-btn" href="guide.html" style="display:inline">मार्गदर्शन इथे बघा →</a></p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <a class="wa" href="https://wa.me/917990947511" target="_blank">💬 WhatsApp वर विचारा</a>
+    <div>ग्रामपंचायत सॉफ्टवेअर — सर्व हक्क राखीव</div>
+    <div class="fine">📧 gaikwadsu11@gmail.com &nbsp;|&nbsp; 📞 +91 79909 47511</div>
+  </div>
+</footer>
+
+<script>
+// ── बदलण्यासाठी इथेच ──
+// पर्याय १ (याच वेबसाईटवर फाईल ठेवली असल्यास — 100 MB च्या आत): खालचं तसंच ठेवा
+var DOWNLOAD_URL = 'downloads/GrampanchayatSoftwareSetup.exe';
+// पर्याय २ (फाईल मोठी असल्यास GitHub Releases वापरा): वरची ओळ बंद करून ही चालू करा
+// var DOWNLOAD_URL = 'https://github.com/तुमचेusername/तुमचे-repo/releases/latest/download/GrampanchayatSoftwareSetup.exe';
+
+document.getElementById('downloadBtn').href = DOWNLOAD_URL;
+document.getElementById('downloadBtn').setAttribute('download','');
+</script>
+</body>
+</html>

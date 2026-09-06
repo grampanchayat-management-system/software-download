@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="mr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>किंमत — ग्रामपंचायत सॉफ्टवेअर</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="letterhead">
+  <div class="wrap">
+    <div class="brand"><span class="seal">🏛️</span> ग्रामपंचायत सॉफ्टवेअर</div>
+    <div class="nav-tabs">
+      <a href="index.html">होम</a>
+      <a href="features.html">वैशिष्ट्ये</a>
+      <a href="download.html">Download</a>
+      <a href="guide.html">मार्गदर्शन</a>
+      <a href="pricing.html" class="active">किंमत</a>
+      <a href="contact.html">संपर्क / तक्रार</a>
+    </div>
+  </div>
+</div>
+
+<section class="hero" style="padding:56px 0 50px">
+  <div class="wrap">
+    <div class="eyebrow-line"></div>
+    <h1 style="font-size:clamp(26px,3.8vw,38px)">एकदा खरेदी — कायमस्वरूपी वापर</h1>
+    <p class="tag">दरवर्षी नूतनीकरणाची गरज नाही. एकदाच पैसे भरा आणि कायम वापरा.</p>
+  </div>
+</section>
+
+<section class="block" id="price">
+  <div class="wrap">
+    <div class="price-panel">
+      <div class="amt">₹4,999</div>
+      <div class="amt-sub">एकदाच — दरवर्षी नूतनीकरण नाही</div>
+    </div>
+
+    <div class="pay-tabs">
+      <button class="pay-tab active" onclick="showPay('qr',this)">📱 QR कोड (UPI)</button>
+      <button class="pay-tab" onclick="showPay('rtgs',this)">🏦 RTGS / Bank Transfer</button>
+    </div>
+
+    <div id="pay-qr" class="pay-panel active">
+      <div class="qr-box" id="qrImgBox">Loading...</div>
+      <div class="upi-id">UPI ID: <b>gaikwadsu11@okhdfcbank</b><br>
+      कुठल्याही UPI App (GPay/PhonePe/Paytm) ने स्कॅन करा — रक्कम ₹4,999 आपोआप भरलेली येईल.</div>
+    </div>
+
+    <div id="pay-rtgs" class="pay-panel">
+      <div class="bank-card">
+        <div class="bank-row"><span class="lbl">Account Holder Name</span><span class="val">Sachin Uttam Gaikwad</span></div>
+        <div class="bank-row"><span class="lbl">Bank Name</span><span class="val">Bank Of Baroda</span></div>
+        <div class="bank-row"><span class="lbl">Branch</span><span class="val">Tembhurni</span></div>
+        <div class="bank-row"><span class="lbl">IFSC Code</span><span class="val">BARB0VARAVA</span></div>
+        <div class="bank-row"><span class="lbl">Account No.</span><span class="val">20858100000510</span></div>
+        <div class="bank-row"><span class="lbl">Amount</span><span class="val">₹4,999</span></div>
+      </div>
+    </div>
+    <div class="pay-note">Payment झाल्यावर screenshot <a href="https://wa.me/917990947511" target="_blank" style="color:var(--blue-dk);font-weight:700">WhatsApp (+91 79909 47511)</a> वर पाठवा — काही वेळात License Key दिली जाईल.</div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <a class="wa" href="https://wa.me/917990947511" target="_blank">💬 WhatsApp वर विचारा</a>
+    <div>ग्रामपंचायत सॉफ्टवेअर — सर्व हक्क राखीव</div>
+    <div class="fine">📧 gaikwadsu11@gmail.com &nbsp;|&nbsp; 📞 +91 79909 47511</div>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script>
+// ── बदलण्यासाठी इथेच ──
+var UPI_ID = 'gaikwadsu11@okhdfcbank';
+var AMOUNT = '4999';
+
+// UPI डीप-लिंकसकट QR — मोबाईलवर सरळ स्कॅन करून रक्कम भरलेली उघडेल
+var upiUrl = 'upi://pay?pa=' + encodeURIComponent(UPI_ID) + '&pn=' + encodeURIComponent('Grampanchayat Software') + '&am=' + AMOUNT + '&cu=INR';
+try{
+  document.getElementById('qrImgBox').innerHTML = '';
+  new QRCode(document.getElementById('qrImgBox'), {
+    text: upiUrl, width: 210, height: 210,
+    colorDark: '#0f2350', colorLight: '#ffffff'
+  });
+}catch(e){
+  document.getElementById('qrImgBox').innerHTML = '<span style="color:#b42318;font-size:13px;padding:0 10px;text-align:center">QR तयार करता आले नाही — वरचा UPI ID वापरून थेट Pay करा.</span>';
+}
+
+function showPay(which, btn){
+  document.querySelectorAll('.pay-tab').forEach(function(b){b.classList.remove('active');});
+  document.querySelectorAll('.pay-panel').forEach(function(p){p.classList.remove('active');});
+  btn.classList.add('active');
+  document.getElementById('pay-'+which).classList.add('active');
+}
+</script>
+</body>
+</html>
