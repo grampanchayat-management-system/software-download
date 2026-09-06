@@ -15,7 +15,7 @@
   --ink:#20222a;
   --ink-soft:#5f6570;
   --grad-main:linear-gradient(135deg,var(--gold-lt) 0%,var(--gold-dk) 100%);
-  --grad-hero:linear-gradient(120deg,#1c1d21 0%,#3a3d44 55%,#6b7178 100%);
+  --grad-hero:linear-gradient(120deg,#2b2003 0%,#6b4e0f 50%,#c9a227 100%);
   --grad-silver:linear-gradient(135deg,var(--silver-lt),var(--silver-dk));
 }
 *{margin:0;padding:0;box-sizing:border-box}
