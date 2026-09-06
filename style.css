@@ -77,15 +77,15 @@ img{max-width:100%;display:block}
   text-decoration:none;border:1.5px solid transparent;cursor:pointer;
   transition:all .18s ease;
 }
-.btn-primary{background:var(--grad-main);color:#2a2005;box-shadow:0 4px 14px rgba(201,162,39,.35)}
-.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 22px rgba(201,162,39,.45)}
+.btn-primary{background:var(--grad-silver);color:var(--graphite-dk);box-shadow:0 4px 14px rgba(107,114,128,.4)}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 22px rgba(107,114,128,.5)}
 .btn-outline{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.4);color:#fff}
 .btn-outline:hover{background:rgba(255,255,255,.18);border-color:#fff}
 .version-note{margin-top:20px;font-size:12.5px;color:#b7bac0}
 
 /* buttons on light (non-hero) pages */
-section.block .btn-primary,.form-card .btn-primary{background:var(--grad-main);color:#2a2005;box-shadow:0 4px 14px rgba(201,162,39,.3)}
-section.block .btn-primary:hover,.form-card .btn-primary:hover{box-shadow:0 8px 22px rgba(201,162,39,.4)}
+section.block .btn-primary,.form-card .btn-primary{background:var(--grad-silver);color:var(--graphite-dk);box-shadow:0 4px 14px rgba(107,114,128,.35)}
+section.block .btn-primary:hover,.form-card .btn-primary:hover{box-shadow:0 8px 22px rgba(107,114,128,.45)}
 section.block .btn-outline{background:#fff;border-color:var(--line);color:var(--graphite)}
 section.block .btn-outline:hover{border-color:var(--gold);color:var(--gold-dk)}
 
