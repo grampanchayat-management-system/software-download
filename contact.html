@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="mr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>संपर्क / तक्रार — ग्रामपंचायत सॉफ्टवेअर</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Devanagari:wght@600;700&family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="letterhead">
+  <div class="wrap">
+    <div class="brand"><span class="seal">🏛️</span> ग्रामपंचायत सॉफ्टवेअर</div>
+    <div class="nav-tabs">
+      <a href="index.html">होम</a>
+      <a href="contact.html" class="active">संपर्क / तक्रार</a>
+    </div>
+  </div>
+</div>
+
+<section class="hero" style="padding:44px 0 40px">
+  <div class="wrap">
+    <div class="eyebrow-line"></div>
+    <h1 style="font-size:clamp(24px,3.6vw,34px)">संपर्क व तक्रार</h1>
+    <p class="tag">सॉफ्टवेअर वापरताना काही अडचण आली, किंवा सुधारणा सुचवायची असेल — खाली फॉर्म भरा किंवा थेट फोन/WhatsApp करा.</p>
+  </div>
+</section>
+
+<section class="block">
+  <div class="wrap">
+    <div class="contact-grid">
+
+      <div class="contact-info-card">
+        <h3>थेट संपर्क</h3>
+        <div class="ci-row"><span class="ico">📞</span><div>फोन<br><a href="tel:+919999999999">+91 99999 99999</a></div></div>
+        <div class="ci-row"><span class="ico">💬</span><div>WhatsApp<br><a href="https://wa.me/919999999999" target="_blank">+91 99999 99999</a></div></div>
+        <div class="ci-row"><span class="ico">📧</span><div>ईमेल<br><a href="mailto:उदाहरण@ईमेल.com">उदाहरण@ईमेल.com</a></div></div>
+        <div class="photo-note">💡 तातडीची अडचण असल्यास फॉर्म न भरता थेट WhatsApp/फोन करणं जास्त जलद ठरेल.</div>
+      </div>
+
+      <div class="form-card">
+        <h3 style="font-size:16px;margin-bottom:18px">तक्रार / समस्या फॉर्म</h3>
+        <form id="complaintForm">
+          <div class="f-group">
+            <label>तुमचे नाव *</label>
+            <input type="text" id="c-name" required placeholder="उदा. रमेश पाटील">
+          </div>
+          <div class="f-group">
+            <label>गाव / ग्रामपंचायतीचे नाव *</label>
+            <input type="text" id="c-village" required placeholder="उदा. ग्रामपंचायत — तालुका, जिल्हा">
+          </div>
+          <div class="f-group">
+            <label>मोबाईल नंबर *</label>
+            <input type="tel" id="c-phone" required pattern="[0-9]{10}" placeholder="10 अंकी मोबाईल नंबर">
+          </div>
+          <div class="f-group">
+            <label>तक्रार / अडचणीचे वर्णन *</label>
+            <textarea id="c-desc" required placeholder="काय समस्या येत आहे ते सविस्तर लिहा…"></textarea>
+          </div>
+          <div class="f-group">
+            <label>स्क्रीनशॉट/फोटो (असल्यास)</label>
+            <label class="photo-drop" id="photoDrop">
+              📷 फोटो निवडण्यासाठी येथे क्लिक करा
+              <input type="file" id="c-photo" accept="image/*">
+            </label>
+          </div>
+          <button type="submit" class="btn btn-primary btn-submit" id="submitBtn">📩 तक्रार पाठवा</button>
+          <div class="form-msg" id="formMsg"></div>
+        </form>
+        <div class="photo-note" id="photoFlowNote" style="display:none">
+          📷 फोटो निवडलेला आहे — <b>"तक्रार पाठवा"</b> दाबल्यावर तक्रार आधी येथे नोंदवली जाईल,
+          आणि लगेच WhatsApp उघडेल — तिथे हाच फोटो <b>स्वतः Attach करून Send</b> करा
+          (सुरक्षेच्या कारणासाठी फोटो आपोआप पाठवता येत नाही, ही शेवटची एक पायरी स्वतः करावी लागेल).
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <a class="wa" href="https://wa.me/919999999999" target="_blank">💬 WhatsApp वर विचारा</a>
+    <div>ग्रामपंचायत सॉफ्टवेअर — सर्व हक्क राखीव</div>
+  </div>
+</footer>
+
+<script>
+// ── बदलण्यासाठी इथे ──
+// 1) https://web3forms.com वर जाऊन (मोफत, Login लागत नाही) तुमचा ईमेल टाका — त्या ईमेलवर
+//    लगेच एक "Access Key" येईल, तो खाली टाका. तक्रारी त्या ईमेलवर येत राहतील.
+var WEB3FORMS_ACCESS_KEY = 'तुमचा-access-key-इथे-टाका';
+var WHATSAPP_NUMBER = '919999999999';
+
+var photoInput=document.getElementById('c-photo');
+var photoDrop=document.getElementById('photoDrop');
+var photoFlowNote=document.getElementById('photoFlowNote');
+photoInput.addEventListener('change',function(){
+  if(photoInput.files&&photoInput.files[0]){
+    photoDrop.classList.add('has-file');
+    photoDrop.childNodes[0].textContent='✅ '+photoInput.files[0].name+' निवडला (बदलण्यासाठी पुन्हा क्लिक करा) ';
+    photoFlowNote.style.display='block';
+  }else{
+    photoFlowNote.style.display='none';
+  }
+});
+
+document.getElementById('complaintForm').addEventListener('submit',function(e){
+  e.preventDefault();
+  var msg=document.getElementById('formMsg');
+  var btn=document.getElementById('submitBtn');
+  var name=document.getElementById('c-name').value.trim();
+  var village=document.getElementById('c-village').value.trim();
+  var phone=document.getElementById('c-phone').value.trim();
+  var desc=document.getElementById('c-desc').value.trim();
+  var hasPhoto=photoInput.files&&photoInput.files[0];
+
+  btn.disabled=true;btn.textContent='पाठवत आहे…';
+  msg.className='form-msg';msg.style.display='none';
+
+  var payload={access_key:WEB3FORMS_ACCESS_KEY,subject:'नवीन तक्रार — '+village,
+    नाव:name,गाव:village,मोबाईल:phone,तक्रार:desc};
+
+  fetch('https://api.web3forms.com/submit',{
+    method:'POST',
+    headers:{'Content-Type':'application/json','Accept':'application/json'},
+    body:JSON.stringify(payload)
+  }).then(function(r){return r.json();}).then(function(data){
+    btn.disabled=false;btn.textContent='📩 तक्रार पाठवा';
+    if(data.success){
+      if(hasPhoto){
+        var waText='तक्रार — '+name+' ('+village+', मोबाईल: '+phone+')%0A'+encodeURIComponent(desc)+'%0A%0A[फोटो सोबत जोडत आहे]';
+        window.open('https://wa.me/'+WHATSAPP_NUMBER+'?text='+waText,'_blank');
+        msg.className='form-msg ok';msg.textContent='✅ तक्रार नोंदवली गेली! आता उघडलेल्या WhatsApp मध्ये फोटो Attach करून Send करा.';
+      }else{
+        msg.className='form-msg ok';msg.textContent='✅ तक्रार यशस्वीरित्या पाठवली गेली. लवकरच संपर्क केला जाईल.';
+      }
+      document.getElementById('complaintForm').reset();
+      photoDrop.classList.remove('has-file');
+      photoFlowNote.style.display='none';
+    }else{
+      msg.className='form-msg err';msg.textContent='❌ तक्रार पाठवता आली नाही. कृपया थेट फोन/WhatsApp करा.';
+    }
+  }).catch(function(){
+    btn.disabled=false;btn.textContent='📩 तक्रार पाठवा';
+    msg.className='form-msg err';msg.textContent='❌ इंटरनेट अडचण — कृपया थेट फोन/WhatsApp करा.';
+  });
+});
+</script>
+</body>
+</html>
