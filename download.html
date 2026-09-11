@@ -43,9 +43,17 @@
         </div>
         <a class="btn btn-primary" id="downloadBtn" href="#" style="padding:10px 20px;font-size:13.5px">⬇️ Download</a>
       </div>
+      <div class="dl-item" style="margin-top:16px">
+        <div class="info">
+          <b>नमुना ८/९ — रिकामा Excel नमुना (Sample Format)</b>
+          <span>.xlsx • मिळकत नोंदी Bulk Import साठी वापरा</span>
+        </div>
+        <a class="btn btn-primary" id="excelDownloadBtn" href="#" style="padding:10px 20px;font-size:13.5px">⬇️ Download</a>
+      </div>
     </div>
     <div class="block-head" style="margin-top:40px;margin-bottom:0">
       <p>Install कसं करायचं व वापर कसा सुरू करायचा — <a class="link-btn" href="guide.html" style="display:inline">मार्गदर्शन इथे बघा →</a></p>
+      <p style="margin-top:8px">या Excel नमुन्यात माहिती भरून सॉफ्टवेअरमध्ये "नमुना ८ Entry" पानावरील <b>"Excel वरून Import"</b> बटणाने एकाच वेळी अनेक मिळकतींच्या नोंदी टाकता येतात.</p>
     </div>
   </div>
 </section>
@@ -67,6 +75,13 @@ var DOWNLOAD_URL = 'https://github.com/grampanchayat-management-system/software-
 
 document.getElementById('downloadBtn').href = DOWNLOAD_URL;
 document.getElementById('downloadBtn').setAttribute('download','');
+
+// ── नमुना ८/९ Excel टेम्प्लेट ──
+// ही फाईल याच वेबसाईटवर "downloads" फोल्डरमध्ये ठेवलेली आहे (आकाराने लहान असल्यामुळे थेट ठेवता येते).
+var EXCEL_DOWNLOAD_URL = 'downloads/Namuna-8-9-Blank-Template.xlsx';
+
+document.getElementById('excelDownloadBtn').href = EXCEL_DOWNLOAD_URL;
+document.getElementById('excelDownloadBtn').setAttribute('download','');
 </script>
 </body>
 </html>
