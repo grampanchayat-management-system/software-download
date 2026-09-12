@@ -99,6 +99,10 @@
 // खालचा नंबर बदलून तुमचा WhatsApp नंबर (देश कोडसह, + शिवाय) टाका.
 var WA_NUMBER = '917990947511';
 
+// ── तक्रारीचा डेटा Google Sheet मध्ये सुद्धा सेव्ह होतो (WhatsApp सोबतच) ──
+// खालची URL Code-Contact.gs Deploy केल्यावर मिळालेल्या Web App लिंकने बदला.
+var CONTACT_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzx8doF3wQV97TO6Jx95yXbVV0OyUDTzp1DW27__FrGl0tHtsqlpUDQ3HUsytXhCbx9/exec';
+
 var photoInput=document.getElementById('c-photo');
 var photoDrop=document.getElementById('photoDrop');
 var photoFlowNote=document.getElementById('photoFlowNote');
@@ -132,6 +136,14 @@ document.getElementById('complaintForm').addEventListener('submit',function(e){
     '📞 मोबाईल: '+phone+'\n\n'+
     '📝 तक्रार:\n'+desc+
     (photoFile?'\n\n📷 (फोटो निवडला होता — कृपया तो या चॅटमध्ये स्वतंत्रपणे जोडून पाठवा)':'');
+
+  // ── Google Sheet ला डेटा पाठवतो (फोटो पाठवता येत नाही, त्यासाठी WhatsApp आहेच) ──
+  var fd=new FormData();
+  fd.append('name', name);
+  fd.append('village', village);
+  fd.append('phone', phone);
+  fd.append('desc', desc);
+  fetch(CONTACT_APPS_SCRIPT_URL, { method:'POST', mode:'no-cors', body: fd }).catch(function(){});
 
   var waUrl='https://wa.me/'+WA_NUMBER+'?text='+encodeURIComponent(text);
   window.open(waUrl,'_blank');
