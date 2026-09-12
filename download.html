@@ -35,7 +35,26 @@
 
 <section class="block">
   <div class="wrap">
-    <div class="dl-list">
+    <!-- ── Download च्या आधी माहिती फॉर्म — भरल्याशिवाय Download बटणं दिसत नाहीत ── -->
+    <div class="form-card" id="gpVerifyCard" style="max-width:460px;margin:0 auto 28px">
+      <h3 style="font-size:16px;margin-bottom:18px">Download साठी थोडी माहिती भरा</h3>
+      <div class="f-group">
+        <label>ग्रामपंचायतीचे नाव *</label>
+        <input type="text" id="gpName" placeholder="उदा. वरवडे ग्रामपंचायत">
+      </div>
+      <div class="f-group">
+        <label>तालुका / जिल्हा *</label>
+        <input type="text" id="gpDistrict" placeholder="उदा. माढा, सोलापूर">
+      </div>
+      <div class="f-group">
+        <label>मोबाईल नंबर *</label>
+        <input type="tel" id="gpMobile" maxlength="10" placeholder="10 अंकी मोबाईल नंबर">
+      </div>
+      <button type="button" class="btn btn-primary btn-submit" id="gpSubmitBtn" onclick="gpSubmitVerify()">✅ Download साठी पुढे जा</button>
+      <div class="form-msg" id="gpFormMsg"></div>
+    </div>
+
+    <div class="dl-list" id="gpDownloadList" style="display:none">
       <div class="dl-item">
         <div class="info">
           <b>Grampanchayat Software — Setup.exe</b>
@@ -82,6 +101,69 @@ var EXCEL_DOWNLOAD_URL = 'downloads/Namuna-8-9-Blank-Template.xlsx';
 
 document.getElementById('excelDownloadBtn').href = EXCEL_DOWNLOAD_URL;
 document.getElementById('excelDownloadBtn').setAttribute('download','');
+
+// ── बदलण्यासाठी इथेच ──
+// खालची Web App URL तुमच्या Google Apps Script Deploy मधून मिळालेल्या लिंकने बदला
+// (उदा. https://script.google.com/macros/s/AKfycb..../exec)
+var APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyqMSreKmJG_V9mi4DG7DDO75X5FeTRSyTcfAmlkiuzmQlEO6LMLxphgXZcZ0KIU282mA/exec';
+
+function gpShowDownloads(){
+  document.getElementById('gpVerifyCard').style.display = 'none';
+  document.getElementById('gpDownloadList').style.display = 'block';
+}
+
+// आधी एकदा फॉर्म भरला असेल तर पुन्हा दाखवायची गरज नाही
+(function(){
+  try{
+    if(localStorage.getItem('gpDownloadVerified') === '1'){ gpShowDownloads(); }
+  }catch(e){}
+})();
+
+function gpSubmitVerify(){
+  var name = document.getElementById('gpName').value.trim();
+  var district = document.getElementById('gpDistrict').value.trim();
+  var mobile = document.getElementById('gpMobile').value.trim();
+  var msg = document.getElementById('gpFormMsg');
+  var btn = document.getElementById('gpSubmitBtn');
+  var mobileOk = /^[0-9]{10}$/.test(mobile);
+
+  msg.className = 'form-msg';
+  msg.style.display = 'none';
+
+  if(!name || !district || !mobileOk){
+    msg.className = 'form-msg err';
+    msg.textContent = 'कृपया सर्व रकाने बरोबर भरा (मोबाईल नंबर 10 अंकी हवा).';
+    msg.style.display = 'block';
+    return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = 'पाठवत आहे…';
+
+  try{ localStorage.setItem('gpDownloadVerified','1'); }catch(e){}
+
+  var proceeded = false;
+  function proceedOnce(){
+    if(proceeded) return;
+    proceeded = true;
+    gpShowDownloads();
+  }
+
+  // ── Google Sheet ला थेट पाठवतो (फुकट, कुठलीही महिन्याची मर्यादा नाही) ──
+  // Apps Script Web App चा प्रतिसाद ब्राऊझरला वाचता येत नाही (Google कडूनच
+  // असलेली मर्यादा) — पण प्रतिसाद वाचायची गरजच नाही, फक्त डेटा पोचला की पुरे.
+  var fd = new FormData();
+  fd.append('name', name);
+  fd.append('district', district);
+  fd.append('mobile', mobile);
+
+  fetch(APPS_SCRIPT_URL, { method:'POST', mode:'no-cors', body: fd })
+    .then(proceedOnce)
+    .catch(proceedOnce);
+
+  // Apps Script कधी slow असेल तरी वापरकर्ता अडकून राहू नये म्हणून fallback
+  setTimeout(proceedOnce, 4000);
+}
 </script>
 </body>
 </html>
