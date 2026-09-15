@@ -43,12 +43,27 @@
         <input type="text" id="gpName" placeholder="उदा. वरवडे ग्रामपंचायत">
       </div>
       <div class="f-group">
-        <label>तालुका / जिल्हा *</label>
-        <input type="text" id="gpDistrict" placeholder="उदा. माढा, सोलापूर">
+        <label>तालुका *</label>
+        <input type="text" id="gpTaluka" placeholder="उदा. माढा">
+      </div>
+      <div class="f-group">
+        <label>जिल्हा *</label>
+        <input type="text" id="gpDistrict" placeholder="उदा. सोलापूर">
       </div>
       <div class="f-group">
         <label>मोबाईल नंबर *</label>
         <input type="tel" id="gpMobile" maxlength="10" placeholder="10 अंकी मोबाईल नंबर">
+      </div>
+      <div class="f-group" style="border-top:1px dashed #ccc;padding-top:14px;margin-top:6px">
+        <label style="font-weight:600">रेफरल माहिती (सॉफ्टवेअरची माहिती कोणी दिली?) — ऐच्छिक</label>
+      </div>
+      <div class="f-group">
+        <label>रेफरल नाव</label>
+        <input type="text" id="gpReferralName" placeholder="ज्यांनी माहिती दिली त्यांचे नाव">
+      </div>
+      <div class="f-group">
+        <label>रेफरल मोबाईल नंबर (PhonePe)</label>
+        <input type="tel" id="gpReferralMobile" maxlength="10" placeholder="10 अंकी मोबाईल नंबर">
       </div>
       <button type="button" class="btn btn-primary btn-submit" id="gpSubmitBtn" onclick="gpSubmitVerify()">✅ Download साठी पुढे जा</button>
       <div class="form-msg" id="gpFormMsg"></div>
@@ -121,18 +136,30 @@ function gpShowDownloads(){
 
 function gpSubmitVerify(){
   var name = document.getElementById('gpName').value.trim();
+  var taluka = document.getElementById('gpTaluka').value.trim();
   var district = document.getElementById('gpDistrict').value.trim();
   var mobile = document.getElementById('gpMobile').value.trim();
+  var referralName = document.getElementById('gpReferralName').value.trim();
+  var referralMobile = document.getElementById('gpReferralMobile').value.trim();
   var msg = document.getElementById('gpFormMsg');
   var btn = document.getElementById('gpSubmitBtn');
   var mobileOk = /^[0-9]{10}$/.test(mobile);
+  // रेफरल मोबाईल ऐच्छिक आहे — भरला असेल तरच 10 अंकी असणं तपासायचं
+  var referralMobileOk = (referralMobile === '') || /^[0-9]{10}$/.test(referralMobile);
 
   msg.className = 'form-msg';
   msg.style.display = 'none';
 
-  if(!name || !district || !mobileOk){
+  if(!name || !taluka || !district || !mobileOk){
     msg.className = 'form-msg err';
     msg.textContent = 'कृपया सर्व रकाने बरोबर भरा (मोबाईल नंबर 10 अंकी हवा).';
+    msg.style.display = 'block';
+    return;
+  }
+
+  if(!referralMobileOk){
+    msg.className = 'form-msg err';
+    msg.textContent = 'रेफरल मोबाईल नंबर भरला असल्यास तो 10 अंकी हवा.';
     msg.style.display = 'block';
     return;
   }
@@ -154,8 +181,11 @@ function gpSubmitVerify(){
   // असलेली मर्यादा) — पण प्रतिसाद वाचायची गरजच नाही, फक्त डेटा पोचला की पुरे.
   var fd = new FormData();
   fd.append('name', name);
+  fd.append('taluka', taluka);
   fd.append('district', district);
   fd.append('mobile', mobile);
+  fd.append('referralName', referralName);
+  fd.append('referralMobile', referralMobile);
 
   fetch(APPS_SCRIPT_URL, { method:'POST', mode:'no-cors', body: fd })
     .then(proceedOnce)
