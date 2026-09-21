@@ -1,0 +1,9 @@
+{
+  "appId": "in.gpsoftware.mobile",
+  "appName": "GP Software",
+  "webDir": "www",
+  "backgroundColor": "#17356a",
+  "android": {
+    "allowMixedContent": false
+  }
+}

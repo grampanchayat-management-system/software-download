@@ -1,0 +1,1192 @@
+<!DOCTYPE html>
+<html lang="mr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>🏛️ ग्रामपंचायत सॉफ्टवेअर — Control Panel</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',sans-serif;background:#1a1a2e;color:#eee;min-height:100vh}
+::-webkit-scrollbar{width:8px;height:8px}
+::-webkit-scrollbar-thumb{background:#0f3460;border-radius:4px}
+
+/* ---------- LOCK SCREEN ---------- */
+#lock{position:fixed;inset:0;background:#1a1a2e;z-index:99999;display:flex;align-items:center;justify-content:center}
+#lock .box{background:#16213e;border:1px solid #0f3460;border-radius:12px;padding:32px;max-width:340px;width:90%;text-align:center}
+#lock .box div.ic{font-size:32px;margin-bottom:10px}
+#lock .box .t{color:#FFD700;font-weight:700;font-size:15px;margin-bottom:14px}
+#lock input{width:100%;background:#0f3460;border:1px solid #4fc3f7;border-radius:6px;padding:10px 12px;color:#fff;font-size:14px;outline:none;margin-bottom:12px}
+#lock .err{color:#f44336;font-size:12px;margin-top:10px;display:none}
+
+/* ---------- LAYOUT ---------- */
+#app{display:none}
+header{background:#16213e;border-bottom:1px solid #0f3460;padding:14px 20px;position:sticky;top:0;z-index:100}
+header h1{color:#FFD700;font-size:19px}
+header .sub{color:#888;font-size:12px;margin-top:2px}
+nav{display:flex;gap:6px;flex-wrap:wrap;background:#141b30;padding:10px 20px;position:sticky;top:60px;z-index:99;border-bottom:1px solid #0f3460}
+nav button{background:none;border:1px solid #0f3460;color:#aaa;padding:8px 14px;border-radius:20px;font-size:12.5px;cursor:pointer;font-weight:600;white-space:nowrap}
+nav button.active{background:#FFD700;color:#1a1a2e;border-color:#FFD700}
+main{padding:20px;max-width:1300px;margin:0 auto}
+.tab{display:none}
+.tab.active{display:block}
+
+/* ---------- CARDS ---------- */
+.card{background:#16213e;border-radius:12px;padding:22px;margin-bottom:18px;border:1px solid #0f3460}
+.card h2{color:#4fc3f7;font-size:15px;margin-bottom:16px;border-bottom:1px solid #0f3460;padding-bottom:8px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px}
+.card h2 small{color:#777;font-size:11px;font-weight:400}
+
+/* ---------- STATS ---------- */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:8px}
+.stat{background:#0f3460;border-radius:10px;padding:16px;text-align:center}
+.stat .sn{font-size:26px;font-weight:800;color:#FFD700}
+.stat .sl{font-size:11px;color:#aaa;margin-top:4px}
+.stat.warn .sn{color:#ff9800}
+.stat.bad .sn{color:#f44336}
+.stat.good .sn{color:#4CAF50}
+
+/* ---------- FORMS ---------- */
+.fgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-bottom:16px}
+.fg label{display:block;font-size:11px;color:#aaa;text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px}
+.fg input,.fg select,.fg textarea{
+  width:100%;background:#0f3460;border:1px solid #4fc3f7;border-radius:6px;
+  padding:9px 12px;color:#fff;font-size:14px;outline:none;font-family:'Segoe UI',sans-serif;
+}
+.fg textarea{resize:vertical;min-height:70px}
+.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:#FFD700}
+.hint{font-size:11.5px;color:#8fa; background:#0f3460;border:1px solid #274; border-radius:8px;padding:10px 12px;margin-bottom:14px;color:#c9d}
+.hint.y{color:#FFD700;border-color:#5a4a00}
+
+/* ---------- BUTTONS ---------- */
+.btn{padding:10px 18px;border:none;border-radius:8px;cursor:pointer;font-size:13px;font-weight:700;display:inline-flex;align-items:center;gap:6px}
+.btn-gen{background:linear-gradient(135deg,#FF6B00,#FF8C42);color:#fff}
+.btn-gen:hover{filter:brightness(1.1)}
+.btn-blue{background:#4fc3f7;color:#000}
+.btn-green{background:#4CAF50;color:#fff}
+.btn-grey{background:#333;color:#eee}
+.btn-red{background:#8a1f1f;color:#fff}
+.btn-copy{background:#4fc3f7;color:#000;padding:5px 10px;font-size:11px}
+.copied{background:#4CAF50!important}
+
+/* ---------- KEY OUTPUT ---------- */
+.key-out-box{background:#0f3460;border:2px solid #FFD700;border-radius:10px;padding:16px;margin-bottom:10px}
+.key-out-box .lbl{font-size:11px;color:#aaa;margin-bottom:6px}
+.key-out-box .kv{font-family:'Courier New';font-size:22px;color:#FFD700;letter-spacing:3px;text-align:center;margin:8px 0;word-break:break-all}
+
+/* ---------- TABLE ---------- */
+.tbl-wrap{overflow-x:auto;margin-top:12px}
+table{width:100%;border-collapse:collapse;font-size:12.5px;min-width:600px}
+th{background:#0f3460;color:#4fc3f7;padding:8px 10px;text-align:left;border-bottom:1px solid #4fc3f7;white-space:nowrap;position:sticky;top:0}
+td{padding:7px 10px;border-bottom:1px solid #1a2a4a}
+tr:hover td{background:#0f3460}
+.no-data{text-align:center;color:#555;padding:22px;font-size:13px}
+.badge{display:inline-block;padding:2px 9px;border-radius:20px;font-size:10.5px;font-weight:700}
+.b-yes{background:#1b5e20;color:#81c784}
+.b-no{background:#4a0000;color:#ef9a9a}
+.mono{font-family:'Courier New',monospace}
+.search-bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.search-bar input{flex:1;min-width:160px;background:#0f3460;border:1px solid #4fc3f7;color:#fff;padding:8px 12px;border-radius:6px;font-size:13px;outline:none}
+
+/* ---------- MAPPING ---------- */
+.maprow{display:grid;grid-template-columns:1fr 1fr;gap:10px;align-items:center;padding:6px 0;border-bottom:1px dashed #1a2a4a}
+.maprow .col-name{font-size:12.5px;color:#ccc}
+.badge-role{display:inline-block;background:#0f3460;color:#4fc3f7;border-radius:6px;padding:3px 8px;font-size:11px;margin-left:6px}
+
+/* ---------- MISC ---------- */
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.small{font-size:11.5px;color:#888}
+.divider{border:none;border-top:1px solid #0f3460;margin:16px 0}
+a{color:#4fc3f7}
+.pill{display:inline-block;background:#0f3460;color:#aaa;padding:3px 10px;border-radius:20px;font-size:11px;margin-right:6px}
+</style>
+<style>
+/* ===== Android (मोबाईल) ===== */
+html,body{overscroll-behavior-y:none}
+header{position:static;padding:calc(12px + env(safe-area-inset-top,0px)) 16px 12px}
+header h1{font-size:19px}
+nav{top:0;flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;padding:8px 12px;gap:6px}
+nav button{flex:0 0 auto}
+main{padding-bottom:calc(24px + env(safe-area-inset-bottom,0px))}
+input,select,textarea{font-size:16px !important}
+.btn{min-height:40px}
+.card{padding:16px}
+</style>
+</head>
+<body>
+
+<!-- ══════════════ APP ══════════════ -->
+<div id="app">
+<header>
+  <h1>🏛️ GP Software Report — Control Panel</h1>
+  <div class="sub">फॉर्म प्रतिसाद + Key + पेमेंट/पावती + तक्रारी — सगळं एका ठिकाणी</div>
+</header>
+
+<nav id="tabNav">
+  <button data-tab="dash" class="active">📊 डॅशबोर्ड</button>
+  <button data-tab="master">👥 ग्राहक मास्टर यादी</button>
+  <button data-tab="keygen">🔑 Key Generator</button>
+  <button data-tab="pay">🧾 पेमेंट / पावती</button>
+  <button data-tab="form">📝 फॉर्म प्रतिसाद</button>
+  <button data-tab="complaint">⚠️ तक्रारी</button>
+  <button data-tab="settings">⚙️ सेटिंग्स</button>
+</nav>
+
+<main>
+
+<!-- ========================================================= DASHBOARD -->
+<section id="tab-dash" class="tab active">
+  <div class="card">
+    <h2>📊 एकूण स्थिती <small id="lastSyncTxt">अजून Sync केलेले नाही</small></h2>
+    <div class="stats">
+      <div class="stat"><div class="sn" id="d-form">0</div><div class="sl">फॉर्म भरले (Google Sheet)</div></div>
+      <div class="stat"><div class="sn" id="d-keys">0</div><div class="sl">Keys दिल्या</div></div>
+      <div class="stat good"><div class="sn" id="d-pay">0</div><div class="sl">Payment / पावत्या</div></div>
+      <div class="stat"><div class="sn" id="d-amt">₹0</div><div class="sl">एकूण जमा रक्कम</div></div>
+      <div class="stat bad"><div class="sn" id="d-complaint">0</div><div class="sl">तक्रारी</div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>🔍 Follow-up आवश्यक असणारे ग्राहक</h2>
+    <div class="stats">
+      <div class="stat warn"><div class="sn" id="f-noKey">0</div><div class="sl">फॉर्म भरला, पण Key नाही दिली</div></div>
+      <div class="stat warn"><div class="sn" id="f-noPay">0</div><div class="sl">Key दिली, पण Payment नाही</div></div>
+      <div class="stat warn"><div class="sn" id="f-openComplaint">0</div><div class="sl">प्रलंबित तक्रारी</div></div>
+    </div>
+    <div class="hint">वरचे आकडे 0 दिसत असतील तर आधी <b>सेटिंग्स</b> टॅबमध्ये जाऊन दोन्ही Google Sheet जोडा आणि "🔄 Sync करा" दाबा.</div>
+  </div>
+
+  <div class="card">
+    <h2>⚡ Quick Actions</h2>
+    <div class="row">
+      <div class="btn btn-blue" onclick="switchTab('keygen')">🔑 नवीन Key तयार करा</div>
+      <div class="btn btn-green" onclick="switchTab('pay')">🧾 नवीन Payment नोंदवा</div>
+      <div class="btn btn-grey" onclick="syncSheets(true)">🔄 Sheets Sync करा</div>
+      <div class="btn btn-grey" onclick="openBlankReceipt()">🖨️ पावती उघडा / शेअर करा</div>
+    </div>
+  </div>
+</section>
+
+<!-- ========================================================= MASTER LIST -->
+<section id="tab-master" class="tab">
+  <div class="card">
+    <h2>👥 ग्राहक मास्टर यादी <small>मोबाईल नंबरावरून सगळा डेटा जोडलेला</small></h2>
+    <div class="search-bar">
+      <input type="text" id="masterSearch" placeholder="नाव / मोबाईल / गाव शोधा..." oninput="renderMaster()">
+      <div class="btn btn-green" onclick="exportMasterCSV()">📥 Export CSV</div>
+      <div class="btn btn-grey" onclick="syncSheets(true)">🔄 Sync करा</div>
+    </div>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr>
+          <th>#</th><th>मोबाईल</th><th>नाव</th><th>गाव</th>
+          <th>फॉर्म</th><th>Key</th><th>Payment</th><th>पावती क्र.</th><th>तक्रार</th>
+          <th>रेफरलचे नाव</th><th>रेफरलचा मोबाईल</th>
+        </tr></thead>
+        <tbody id="masterTable"><tr><td colspan="11" class="no-data">डेटा नाही. सेटिंग्समध्ये Sheets जोडून Sync करा.</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ========================================================= KEY GENERATOR -->
+<section id="tab-keygen" class="tab">
+  <div class="card">
+    <h2>⚙️ Secret Key Configuration <small>app.html / main.js शी match असावे</small></h2>
+    <div class="fg">
+      <label>🔐 LICENSE_SECRET</label>
+      <input id="secretInput" type="text" value="" placeholder="LICENSE_SECRET टाका (एकदाच)">
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>📊 Key Statistics</h2>
+    <div class="stats">
+      <div class="stat"><div class="sn" id="kg-total">0</div><div class="sl">Total Keys</div></div>
+      <div class="stat"><div class="sn" id="kg-machines">0</div><div class="sl">वेगवेगळे Machine Codes</div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>➕ नवीन Product Key Generate करा</h2>
+    <div class="fgrid">
+      <div class="fg"><label>ग्रामपंचायत नाव *</label><input type="text" id="gpName" oninput="updateGPCode()" placeholder="उदा: Warwade"></div>
+      <div class="fg"><label>GP Code (auto, 4 अक्षरं)</label><input type="text" id="gpCode" maxlength="4" style="text-transform:uppercase;letter-spacing:2px;color:#FFD700;font-weight:700"></div>
+      <div class="fg"><label>Customer चा Machine Code *</label><input type="text" id="machineCode" maxlength="6" style="text-transform:uppercase;letter-spacing:2px;color:#4CAF50;font-weight:700" placeholder="उदा: A1B2C3"></div>
+      <div class="fg"><label>Customer / ग्रामपंचायत नाव (नोंद)</label><input type="text" id="customerName" placeholder="optional"></div>
+      <div class="fg"><label>📱 Customer चा मोबाईल नंबर</label><input type="text" id="customerMobile" maxlength="13" placeholder="9876543210"></div>
+    </div>
+    <div class="hint y">📱 मोबाईल नंबर टाकल्यास हा customer आपोआप <b>ग्राहक मास्टर यादी</b>तील त्याच्या फॉर्म/पेमेंट/तक्रार नोंदीशी जोडला जाईल — त्यामुळे तो जरूर भरा.</div>
+    <div class="hint">♾️ प्रत्येक Key ही वरच्या Machine Code शीच बांधलेली असते (Lifetime वैध) — एका customer साठी एकच Key लागते.</div>
+    <div class="btn btn-gen" onclick="generateKeys()">⚡ Generate Key</div>
+    <div id="genOutput" style="margin-top:14px;display:none"><div id="keysGenerated"></div></div>
+  </div>
+
+  <div class="card">
+    <h2>📋 सर्व Generated Keys</h2>
+    <div class="search-bar">
+      <input type="text" id="kgSearch" placeholder="Search..." oninput="renderKeyTable()">
+      <div class="btn btn-green" onclick="exportKeysCSV()">📥 Export CSV</div>
+      <div class="btn btn-red" onclick="clearAllKeys()">🗑️ सर्व delete करा</div>
+    </div>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>#</th><th>Key</th><th>GP नाव</th><th>Customer</th><th>मोबाईल</th><th>Machine Code</th><th>दिनांक</th><th></th></tr></thead>
+        <tbody id="keysTable"><tr><td colspan="8" class="no-data">Keys नाहीत.</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ========================================================= PAYMENT / RECEIPT -->
+<section id="tab-pay" class="tab">
+  <div class="card">
+    <h2>🧾 नवीन Payment / पावती नोंद <small>अधिकृत छापील पावतीसाठी खालचं बटण वापरा</small></h2>
+    <div class="fgrid">
+      <div class="fg"><label>पावती क्र. (auto)</label><input type="text" id="payNo" readonly></div>
+      <div class="fg"><label>दिनांक</label><input type="date" id="payDate"></div>
+      <div class="fg"><label>ग्राहकाचे नाव *</label><input type="text" id="payName"></div>
+      <div class="fg"><label>गाव</label><input type="text" id="payVillage"></div>
+      <div class="fg"><label>तालुका</label><input type="text" id="payTaluka"></div>
+      <div class="fg"><label>जिल्हा</label><input type="text" id="payJilha"></div>
+      <div class="fg"><label>मोबाईल नं. *</label><input type="text" id="payMobile" maxlength="13"></div>
+      <div class="fg"><label>रक्कम (₹) *</label><input type="number" id="payAmount"></div>
+      <div class="fg"><label>देयक प्रकार</label>
+        <select id="payType"><option>रोख</option><option>UPI</option><option>बँक ट्रान्सफर</option></select>
+      </div>
+    </div>
+    <div class="btn btn-gen" onclick="addPayment()">✅ नोंद जतन करा</div>
+  </div>
+
+  <div class="card">
+    <h2>📋 सर्व Payment नोंदी <small id="payTotalTxt"></small></h2>
+    <div class="search-bar">
+      <input type="text" id="paySearch" placeholder="Search..." oninput="renderPayTable()">
+      <div class="btn btn-green" onclick="exportPayCSV()">📥 Export CSV</div>
+      <div class="btn btn-red" onclick="clearAllReceipts()">🗑️ सर्व पावती नोंदी मिटवा</div>
+    </div>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>पावती क्र.</th><th>दिनांक</th><th>नाव</th><th>गाव</th><th>तालुका</th><th>जिल्हा</th><th>मोबाईल</th><th>रक्कम</th><th>प्रकार</th><th>पावती</th></tr></thead>
+        <tbody id="payTable"><tr><td colspan="10" class="no-data">नोंदी नाहीत.</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ========================================================= FORM SHEET -->
+<section id="tab-form" class="tab">
+  <div class="card">
+    <h2>📝 डाउनलोड-पूर्व फॉर्म प्रतिसाद <small id="formSyncTxt"></small></h2>
+    <div class="row" style="margin-bottom:12px">
+      <div class="btn btn-grey" onclick="syncOne('form',true)">🔄 Sync करा</div>
+      <a class="btn btn-grey" style="text-decoration:none" id="formSheetLink" href="#" target="_blank">📄 Sheet उघडा</a>
+    </div>
+    <div class="search-bar"><input type="text" id="formSearch" placeholder="Search..." oninput="renderFormTable()"></div>
+    <div class="tbl-wrap"><table><thead id="formTHead"></thead><tbody id="formTable"><tr><td class="no-data">सेटिंग्समध्ये Sheet Link टाका आणि Sync करा.</td></tr></tbody></table></div>
+  </div>
+</section>
+
+<!-- ========================================================= COMPLAINT SHEET -->
+<section id="tab-complaint" class="tab">
+  <div class="card">
+    <h2>⚠️ वेबसाईटवरून आलेल्या तक्रारी <small id="complaintSyncTxt"></small></h2>
+    <div class="row" style="margin-bottom:12px">
+      <div class="btn btn-grey" onclick="syncOne('complaint',true)">🔄 Sync करा</div>
+      <a class="btn btn-grey" style="text-decoration:none" id="complaintSheetLink" href="#" target="_blank">📄 Sheet उघडा</a>
+    </div>
+    <div class="search-bar"><input type="text" id="complaintSearch" placeholder="Search..." oninput="renderComplaintTable()"></div>
+    <div class="tbl-wrap"><table><thead id="complaintTHead"></thead><tbody id="complaintTable"><tr><td class="no-data">सेटिंग्समध्ये Sheet Link टाका आणि Sync करा.</td></tr></tbody></table></div>
+  </div>
+</section>
+
+<!-- ========================================================= SETTINGS -->
+<section id="tab-settings" class="tab">
+  <div class="card">
+    <h2>⚙️ Google Sheet जोडणी</h2>
+    <div class="hint y">
+      ⚠️ दोन्ही Sheet आपोआप वाचता येण्यासाठी ती <b>"Anyone with the link – Viewer"</b> अशी share करा
+      (Share बटण → General access → Anyone with the link). नुसती "edit" लिंक इथे चालणार नाही कारण ती login मागते.
+      Share केल्यावर तीच link (किंवा वरची edit link) खाली paste करा — सॉफ्टवेअर आपोआप योग्य CSV link बनवेल.
+    </div>
+    <div class="fgrid">
+      <div class="fg">
+        <label>1️⃣ डाउनलोड-पूर्व फॉर्म — Google Sheet Link</label>
+        <input type="text" id="cfgFormUrl" placeholder="https://docs.google.com/spreadsheets/d/....">
+      </div>
+      <div class="fg">
+        <label>2️⃣ तक्रारी — Google Sheet Link</label>
+        <input type="text" id="cfgComplaintUrl" placeholder="https://docs.google.com/spreadsheets/d/....">
+      </div>
+    </div>
+    <div class="row">
+      <div class="btn btn-gen" onclick="saveConfigAndSync()">💾 जतन करा + Sync करा</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>✋ Sync काम करत नसेल तर (Manual Import)</h2>
+    <div class="hint">Browser security मुळे थेट fetch अयशस्वी झाल्यास: Google Sheet उघडा → File → Download → <b>Comma Separated Values (.csv)</b> → ती फाईल notepad ने उघडून सगळा मजकूर खाली संबंधित बॉक्समध्ये paste करून "Import" दाबा.</div>
+    <div class="fgrid">
+      <div class="fg"><label>फॉर्म Sheet — CSV मजकूर paste करा</label><textarea id="manualFormCsv"></textarea></div>
+      <div class="fg"><label>तक्रारी Sheet — CSV मजकूर paste करा</label><textarea id="manualComplaintCsv"></textarea></div>
+    </div>
+    <div class="row">
+      <div class="btn btn-blue" onclick="importManual('form')">📥 फॉर्म Import करा</div>
+      <div class="btn btn-blue" onclick="importManual('complaint')">📥 तक्रारी Import करा</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>🗺️ Column Mapping</h2>
+    <div class="small">Sync/Import केल्यावर इथे प्रत्येक Sheet चे कॉलम दिसतील — "मोबाईल" आणि "नाव" कॉलम बरोबर निवडलेले आहेत ना ते तपासा (आपोआप अंदाज घेतलेला असतो).</div>
+    <hr class="divider">
+    <div class="small" style="margin-bottom:6px">📝 फॉर्म Sheet:</div>
+    <div id="formMapBox2"></div>
+    <hr class="divider">
+    <div class="small" style="margin-bottom:6px">⚠️ तक्रारी Sheet:</div>
+    <div id="complaintMapBox2"></div>
+  </div>
+
+  <div class="card">
+    <h2>🧨 Data</h2>
+    <div class="row">
+      <div class="btn btn-grey" onclick="exportAllBackup()">⬇️ संपूर्ण Backup (JSON) घ्या</div>
+      <input type="file" id="importFileInput" accept="application/json" style="display:none" onchange="importAllBackup(this.files[0])">
+      <div class="btn btn-grey" onclick="document.getElementById('importFileInput').click()">⬆️ Backup पुन्हा आणा</div>
+      <div class="btn btn-red" onclick="clearAllData()">🧹 सगळा डेटा मिटवा (Trial साफ करा)</div>
+    </div>
+  </div>
+</section>
+
+</main>
+</div>
+
+<script>
+/* ============================================================
+   STORAGE KEYS  (same keys used by pavati_v3.html / keygen.html
+   so data stays in sync across all three files when opened from
+   the same folder / browser)
+   ============================================================ */
+var LS_RECEIPTS   = 'gp_receipt_records';   // pavati_v3.html
+var LS_NEXT_NO    = 'gp_next_receipt_number';
+var LS_KEYS       = 'gp_generated_keys';    // keygen.html
+var LS_CONFIG     = 'gp_cp_config';
+var LS_FORM_CACHE = 'gp_cp_form_cache';
+var LS_COMP_CACHE = 'gp_cp_complaint_cache';
+
+function lsGet(key, fallback){ try{ var v = JSON.parse(localStorage.getItem(key)); return v===null||v===undefined ? fallback : v; }catch(e){ return fallback; } }
+function lsSet(key, val){ localStorage.setItem(key, JSON.stringify(val)); }
+
+var allKeys     = lsGet(LS_KEYS, []);
+var allReceipts = lsGet(LS_RECEIPTS, []);
+var config      = lsGet(LS_CONFIG, {formUrl:'', complaintUrl:'', formMap:{}, complaintMap:{}, lastSync:null});
+var formCache   = lsGet(LS_FORM_CACHE, {headers:[], rows:[]});
+var compCache   = lsGet(LS_COMP_CACHE, {headers:[], rows:[]});
+
+/* ============================================================
+   TABS
+   ============================================================ */
+document.getElementById('tabNav').addEventListener('click', function(e){
+  var b = e.target.closest('button[data-tab]');
+  if(!b) return;
+  switchTab(b.getAttribute('data-tab'));
+});
+function switchTab(name){
+  document.querySelectorAll('#tabNav button').forEach(function(b){ b.classList.toggle('active', b.getAttribute('data-tab')===name); });
+  document.querySelectorAll('.tab').forEach(function(s){ s.classList.toggle('active', s.id === 'tab-'+name); });
+}
+
+/* ============================================================
+   CSV PARSER + SHEET URL HELPERS
+   ============================================================ */
+function parseCSV(text){
+  var rows=[], row=[], field='', inQ=false;
+  for (var i=0;i<text.length;i++){
+    var c=text[i];
+    if (inQ){
+      if (c==='"'){ if(text[i+1]==='"'){field+='"';i++;} else inQ=false; }
+      else field+=c;
+    } else {
+      if (c==='"') inQ=true;
+      else if (c===','){ row.push(field); field=''; }
+      else if (c==='\r'){ /*skip*/ }
+      else if (c==='\n'){ row.push(field); rows.push(row); row=[]; field=''; }
+      else field+=c;
+    }
+  }
+  if (field.length || row.length){ row.push(field); rows.push(row); }
+  return rows.filter(function(r){ return r.length>1 || (r.length===1 && r[0]!==''); });
+}
+
+function sheetKind(url){
+  if(/\/forms\//.test(url)) return 'form-link';
+  if(/\/spreadsheets\/d\/e\//.test(url)) return 'published';
+  if(/\/spreadsheets\/d\/[a-zA-Z0-9-_]+/.test(url)) return 'sheet';
+  return 'unknown';
+}
+function toCsvExportUrl(url){
+  if(!url) return '';
+  var gidm = url.match(/gid=([0-9]+)/);
+  var gid = gidm ? gidm[1] : '0';
+  var pub = url.match(/\/spreadsheets\/d\/e\/([a-zA-Z0-9-_]+)/);
+  if(pub){
+    return 'https://docs.google.com/spreadsheets/d/e/'+pub[1]+'/pub?output=csv'+(gidm ? '&gid='+gid : '');
+  }
+  var idm = url.match(/\/spreadsheets\/d\/([a-zA-Z0-9-_]+)/);
+  if(!idm) return url;
+  return 'https://docs.google.com/spreadsheets/d/'+idm[1]+'/export?format=csv&gid='+gid;
+}
+/* पर्यायी पत्ता — पहिला अयशस्वी झाल्यास वापरला जातो */
+function toGvizCsvUrl(url){
+  var idm = url.match(/\/spreadsheets\/d\/([a-zA-Z0-9-_]+)/);
+  if(!idm || idm[1]==='e') return '';
+  var gidm = url.match(/gid=([0-9]+)/);
+  return 'https://docs.google.com/spreadsheets/d/'+idm[1]+'/gviz/tq?tqx=out:csv&gid='+(gidm ? gidm[1] : '0');
+}
+
+function normMobile(s){
+  if(s===null || s===undefined) return '';
+  var raw = String(s).trim();
+  /* Google Sheets कधी कधी नंबर 9.76689E+09 असा देतो — तो दुरुस्त करा */
+  if(/^[0-9]+(\.[0-9]+)?e\+?[0-9]+$/i.test(raw)){
+    var n = Number(raw);
+    if(isFinite(n)) raw = n.toFixed(0);
+  }
+  var digits = raw.replace(/[^0-9]/g,'');
+  if(digits.length > 10) digits = digits.slice(-10);   /* +91 / 0 काढून टाका */
+  if(digits.length === 10) return digits;
+  /* अपूर्ण नंबर असला तरी लपवू नका — निदान दिसू तरी दे */
+  return digits.length >= 6 ? digits : '';
+}
+function normName(s){ return (s||'').toString().trim().toLowerCase(); }
+
+/* ============================================================
+   COLUMN GUESSING  (सुधारित)
+   ============================================================ */
+function guessCol(headers, keywords, avoid){
+  for (var i=0;i<headers.length;i++){
+    var h = (headers[i]||'').toString().toLowerCase().trim();
+    if(!h) continue;
+    var skip = false;
+    if(avoid){
+      for(var a=0;a<avoid.length;a++){ if(h.indexOf(avoid[a])!==-1){ skip=true; break; } }
+    }
+    if(skip) continue;
+    for (var k=0;k<keywords.length;k++){
+      if (h.indexOf(keywords[k]) !== -1) return i;
+    }
+  }
+  return -1;
+}
+
+/* header वरून सापडलं नाही तर प्रत्यक्ष डेटा बघून मोबाईल कॉलम ओळखा */
+function detectMobileByData(headers, rows){
+  if(!rows || !rows.length) return -1;
+  var bestIdx = -1, bestScore = 0;
+  var sample = rows.slice(0, 60);
+  for (var c=0;c<headers.length;c++){
+    var hit = 0, total = 0;
+    for (var r=0;r<sample.length;r++){
+      var v = sample[r][c];
+      if(v===undefined || String(v).trim()==='') continue;
+      total++;
+      var d = String(v).replace(/[^0-9]/g,'');
+      if(d.length>10) d = d.slice(-10);
+      if(d.length===10 && /^[6-9]/.test(d)) hit++;
+    }
+    if(total>0){
+      var score = hit/total;
+      if(score >= 0.6 && score > bestScore){ bestScore = score; bestIdx = c; }
+    }
+  }
+  return bestIdx;
+}
+
+/* header वरून नाव सापडलं नाही तर पहिला मजकूर-कॉलम घ्या */
+function detectNameByData(headers, rows, used){
+  if(!rows || !rows.length) return -1;
+  var sample = rows.slice(0, 40);
+  for (var c=0;c<headers.length;c++){
+    if(used.indexOf(c)!==-1) continue;
+    var ok = 0, total = 0;
+    for (var r=0;r<sample.length;r++){
+      var v = sample[r][c];
+      if(v===undefined || String(v).trim()==='') continue;
+      total++;
+      var str = String(v).trim();
+      var digits = str.replace(/[^0-9]/g,'').length;
+      if(str.length<=40 && digits < str.length/2) ok++;   /* बहुतांश अक्षरं = नाव */
+    }
+    if(total>0 && ok/total >= 0.7) return c;
+  }
+  return -1;
+}
+
+var MOBILE_KEYS = ['mobile','mob no','mob.','mobil','phone','whatsapp','cell','contact',
+                   'मोबाईल','मोबाइल','मोबईल','भ्रमण','फोन','व्हाट्सअ‍ॅप','व्हॉट्सअ‍ॅप',
+                   'मो.','मो नं','मो. नं','संपर्क','दूरध्वनी'];
+var MOBILE_WEAK  = ['क्रमांक','नंबर','नं.','number'];
+var NAME_KEYS    = ['name','नाव','नांव','ना़व','अर्जदार','ग्राहक','व्यक्ती'];
+var NAME_AVOID   = ['timestamp','वेळ','दिनांक','date','email','e-mail','ई-मेल','mail',
+                    'mobile','मोबाईल','मोबाइल','phone','फोन','गाव','village','संपर्क'];
+var MOBILE_AVOID = ['timestamp','वेळ','दिनांक','date','email','ई-मेल','mail','पावती','receipt','aadhaar','आधार'];
+
+/* रेफरल (कोणी सुचवलं/पाठवलं) नाव व मोबाईल ओळखण्यासाठी keys */
+var REF_NAME_KEYS   = ['referral name','referral','referred by','reference name','reference',
+                       'रेफरल नाव','रेफरल','रेफर करणाऱ्याचे नाव','संदर्भ नाव','संदर्भ','कोणी सांगितले',
+                       'कोणी सुचवले','कोणी पाठवले','ओळख करून देणारे','सुचवणाऱ्याचे नाव'];
+var REF_MOBILE_KEYS = ['referral mobile','referral phone','referral contact','reference mobile',
+                       'रेफरल मोबाईल','रेफरल नंबर','संदर्भ मोबाईल','संदर्भ नंबर','सुचवणाऱ्याचा मोबाईल',
+                       'सुचवणाऱ्याचा नंबर','रेफर करणाऱ्याचा मोबाईल'];
+
+function autoMap(headers, type, rows){
+  var m = {};
+  m.mobile = guessCol(headers, MOBILE_KEYS, MOBILE_AVOID);
+  if(m.mobile < 0) m.mobile = guessCol(headers, MOBILE_WEAK, MOBILE_AVOID);
+  if(m.mobile < 0) m.mobile = detectMobileByData(headers, rows);
+
+  m.village= guessCol(headers, ['village','गाव','ग्रामपंचायत','गांव'], ['timestamp','date']);
+  m.date   = guessCol(headers, ['timestamp','date','दिनांक','वेळ']);
+
+  m.name   = guessCol(headers, NAME_KEYS, NAME_AVOID);
+  if(m.name < 0) m.name = detectNameByData(headers, rows, [m.mobile, m.village, m.date]);
+  /* नाव चुकून timestamp/मोबाईल कॉलमवर पडू देऊ नका */
+  if(m.name >= 0 && (m.name === m.date || m.name === m.mobile)) m.name = -1;
+
+  if (type==='form'){
+    m.refName   = guessCol(headers, REF_NAME_KEYS, NAME_AVOID);
+    m.refMobile = guessCol(headers, REF_MOBILE_KEYS, MOBILE_AVOID);
+  }
+
+  if (type==='complaint'){
+    m.text = guessCol(headers, ['complaint','issue','problem','तक्रार','समस्या','description','msg','message']);
+    m.status = guessCol(headers, ['status','स्थिती']);
+  }
+  return m;
+}
+
+/* ---- saved map खरंच बरोबर आहे का ते डेटा बघून तपासा ---- */
+function colMobileScore(rows, idx){
+  if(idx<0 || !rows || !rows.length) return 0;
+  var hit=0, total=0, sample=rows.slice(0,60);
+  for(var r=0;r<sample.length;r++){
+    var v = sample[r][idx];
+    if(v===undefined || String(v).trim()==='') continue;
+    total++;
+    if(normMobile(v).length===10) hit++;
+  }
+  return total ? hit/total : 0;
+}
+function colLooksLikeDate(rows, idx){
+  if(idx<0 || !rows || !rows.length) return false;
+  var hit=0, total=0, sample=rows.slice(0,40);
+  for(var r=0;r<sample.length;r++){
+    var v = sample[r][idx];
+    if(v===undefined || String(v).trim()==='') continue;
+    total++;
+    if(/^\s*\d{1,4}[-\/.]\d{1,2}[-\/.]\d{1,4}/.test(String(v))) hit++;
+  }
+  return total>0 && hit/total >= 0.7;
+}
+
+/* जुना map ठेवा — पण तो डेटाशी जुळत नसेल तर auto ने दुरुस्त करा */
+function mergeMap(oldMap, autoM, headers, rows){
+  var out = {}, n = headers.length;
+  Object.keys(autoM).forEach(function(f){
+    var ov = oldMap ? oldMap[f] : undefined;
+    var valid = (typeof ov === 'number') && ov >= 0 && ov < n;
+    if(!valid){ out[f] = autoM[f]; return; }
+
+    /* saved मोबाईल कॉलममध्ये खरंच नंबर आहेत का? */
+    if(f === 'mobile' && colMobileScore(rows, ov) < 0.5 && autoM.mobile >= 0){
+      out[f] = autoM.mobile; return;
+    }
+    /* saved नाव कॉलम म्हणजे तारीख/वेळ तर नाही ना? */
+    if(f === 'name' && (ov === autoM.date || colLooksLikeDate(rows, ov)) && autoM.name >= 0){
+      out[f] = autoM.name; return;
+    }
+    out[f] = ov;
+  });
+  return out;
+}
+
+/* ============================================================
+   FETCH / SYNC
+   ============================================================ */
+function syncSheets(userTriggered){
+  syncOne('form', userTriggered);
+  syncOne('complaint', userTriggered);
+}
+function fetchCsvText(csvUrl){
+  /* Desktop app मध्ये मुख्य process द्वारे; अन्यथा साधे fetch */
+  if(window.gpBridge && window.gpBridge.fetchSheetCsv){
+    return window.gpBridge.fetchSheetCsv(csvUrl).then(function(r){
+      if(!r || !r.ok) throw new Error((r && r.error) || 'अज्ञात चूक');
+      return r.text;
+    });
+  }
+  return fetch(csvUrl).then(function(r){
+    if(!r.ok) throw new Error('HTTP '+r.status);
+    return r.text();
+  });
+}
+function fetchCsvChecked(csvUrl){
+  return fetchCsvText(csvUrl).then(function(text){
+    /* Sheet private असेल तर Google login पेज (HTML) परत देतो */
+    if(/^\s*<(!doctype|html)/i.test(text)) throw new Error('Sheet private आहे (login पेज आले)');
+    return text;
+  });
+}
+function syncOne(type, userTriggered){
+  var label = type==='form' ? 'फॉर्म' : 'तक्रारी';
+  var url = type==='form' ? config.formUrl : config.complaintUrl;
+  if(!url){
+    if(userTriggered) alert('आधी सेटिंग्समध्ये जाऊन '+label+' Sheet ची link टाका.');
+    return;
+  }
+  var kind = sheetKind(url);
+  if(kind==='form-link'){
+    if(userTriggered) alert('⚠️ '+label+' Sheet: तुम्ही Google Form ची link टाकली आहे.\n\nSheet ची link हवी — Form च्या Responses टॅबमध्ये "Link to Sheets" करून, त्या Sheet ची link (docs.google.com/spreadsheets/...) टाका.');
+    return;
+  }
+  var csvUrl = toCsvExportUrl(url);
+  var altUrl = kind==='sheet' ? toGvizCsvUrl(url) : '';
+  var usedUrl = csvUrl;
+  fetchCsvChecked(csvUrl)
+    .catch(function(err1){
+      if(!altUrl) throw err1;
+      usedUrl = altUrl;
+      return fetchCsvChecked(altUrl).catch(function(err2){
+        throw new Error(err1.message+' / पर्यायी: '+err2.message);
+      });
+    })
+    .then(function(text){
+      var rows = parseCSV(text);
+      if(!rows.length) throw new Error('रिकामा प्रतिसाद');
+      applySheetData(type, rows);
+      if(userTriggered) alert(label+' Sheet यशस्वीरित्या Sync झाली — '+ (rows.length-1) +' नोंदी.');
+    })
+    .catch(function(err){
+      if(userTriggered){
+        alert('⚠️ '+label+' Sheet — Sync अयशस्वी.\n\nचूक: '+err.message+
+          '\n\nवापरलेला पत्ता:\n'+usedUrl+
+          '\n\nतपासा:\n1) Sheet "Anyone with the link – Viewer" शेअर आहे का\n2) Settings मध्ये Sheet ची (Form ची नव्हे) link आहे का\n3) इंटरनेट चालू आहे का\n\nउपाय: सेटिंग्स टॅबमधील "Manual Import" वापरा (Sheet CSV म्हणून download करून paste करा).');
+      }
+    });
+}
+function applySheetData(type, rows){
+  var headers = rows[0];
+  var dataRows = rows.slice(1);
+  var cache = {headers:headers, rows:dataRows, fetchedAt:new Date().toISOString()};
+  if (type==='form'){
+    formCache = cache; lsSet(LS_FORM_CACHE, formCache);
+    config.formMap = mergeMap(config.formMap, autoMap(headers,'form',dataRows), headers, dataRows);
+  } else {
+    compCache = cache; lsSet(LS_COMP_CACHE, compCache);
+    config.complaintMap = mergeMap(config.complaintMap, autoMap(headers,'complaint',dataRows), headers, dataRows);
+  }
+  config.lastSync = new Date().toISOString();
+  lsSet(LS_CONFIG, config);
+  renderMapBoxes();
+  renderFormTable();
+  renderComplaintTable();
+  renderDashboard();
+  renderMaster();
+}
+
+function saveConfigAndSync(){
+  config.formUrl = document.getElementById('cfgFormUrl').value.trim();
+  config.complaintUrl = document.getElementById('cfgComplaintUrl').value.trim();
+  lsSet(LS_CONFIG, config);
+  document.getElementById('formSheetLink').href = config.formUrl || '#';
+  document.getElementById('complaintSheetLink').href = config.complaintUrl || '#';
+  syncSheets(true);
+}
+
+function importManual(type){
+  var text = document.getElementById(type==='form' ? 'manualFormCsv' : 'manualComplaintCsv').value;
+  if(!text.trim()){ alert('आधी CSV मजकूर paste करा.'); return; }
+  var rows = parseCSV(text);
+  if(!rows.length){ alert('CSV वाचता आलं नाही.'); return; }
+  applySheetData(type, rows);
+  alert('Import यशस्वी — '+(rows.length-1)+' नोंदी.');
+}
+
+/* ============================================================
+   COLUMN MAPPING UI
+   ============================================================ */
+var FIELD_LABELS = {name:'नाव',mobile:'मोबाईल',village:'गाव',date:'दिनांक',text:'तक्रार मजकूर',status:'स्थिती',refName:'रेफरलचे नाव',refMobile:'रेफरलचा मोबाईल'};
+function renderMapBoxes(){
+  renderOneMapBox('formMapBox2', formCache, config.formMap, 'form', ['name','mobile','village','date','refName','refMobile']);
+  renderOneMapBox('complaintMapBox2', compCache, config.complaintMap, 'complaint', ['name','mobile','date','text','status']);
+}
+function renderOneMapBox(elId, cache, map, type, fields){
+  var el = document.getElementById(elId);
+  if(!el) return;
+  if(!cache.headers || !cache.headers.length){ el.innerHTML = '<div class="small">अजून डेटा नाही.</div>'; return; }
+  var html = '<div style="margin-bottom:8px"><button onclick="reDetectMap(\'' + type + '\')">🔄 कॉलम पुन्हा ओळखा</button></div>';
+  fields.forEach(function(f){
+    html += '<div class="maprow"><div class="col-name">'+FIELD_LABELS[f]+'</div><select onchange="setMap(\''+type+'\',\''+f+'\',this.value,\''+elId+'\')">';
+    html += '<option value="-1"'+(map[f]===-1||map[f]===undefined?' selected':'')+'>-- निवडा --</option>';
+    cache.headers.forEach(function(h,i){
+      html += '<option value="'+i+'"'+(map[f]===i?' selected':'')+'>'+ (h||('कॉलम '+(i+1))) +'</option>';
+    });
+    html += '</select></div>';
+  });
+  el.innerHTML = html;
+}
+function reDetectMap(type){
+  var cache = (type==='form') ? formCache : compCache;
+  if(!cache.headers || !cache.headers.length){ alert('आधी Sync / Import करा.'); return; }
+  var m = autoMap(cache.headers, type, cache.rows);
+  if(type==='form') config.formMap = m; else config.complaintMap = m;
+  lsSet(LS_CONFIG, config);
+  renderMapBoxes(); renderFormTable(); renderComplaintTable(); renderDashboard(); renderMaster();
+  alert('कॉलम पुन्हा ओळखले.\n\nमोबाईल: ' + (m.mobile>=0 ? cache.headers[m.mobile] : 'सापडला नाही') +
+        '\nनाव: ' + (m.name>=0 ? cache.headers[m.name] : 'सापडलं नाही'));
+}
+function setMap(type, field, value, sourceElId){
+  var m = type==='form' ? config.formMap : config.complaintMap;
+  m[field] = parseInt(value);
+  lsSet(LS_CONFIG, config);
+  renderMapBoxes();
+  renderFormTable(); renderComplaintTable(); renderDashboard(); renderMaster();
+}
+
+/* ============================================================
+   GENERIC SHEET TABLE RENDER (form + complaint)
+   ============================================================ */
+function renderFormTable(){
+  renderSheetTable(formCache, 'formTHead', 'formTable', document.getElementById('formSearch').value);
+  document.getElementById('formSyncTxt').textContent = formCache.fetchedAt ? ('शेवटचं Sync: '+ new Date(formCache.fetchedAt).toLocaleString('mr-IN')) : '';
+  document.getElementById('formSheetLink').href = config.formUrl || '#';
+}
+function renderComplaintTable(){
+  renderSheetTable(compCache, 'complaintTHead', 'complaintTable', document.getElementById('complaintSearch').value);
+  document.getElementById('complaintSyncTxt').textContent = compCache.fetchedAt ? ('शेवटचं Sync: '+ new Date(compCache.fetchedAt).toLocaleString('mr-IN')) : '';
+  document.getElementById('complaintSheetLink').href = config.complaintUrl || '#';
+}
+function renderSheetTable(cache, theadId, tbodyId, search){
+  var thead = document.getElementById(theadId), tbody = document.getElementById(tbodyId);
+  if(!cache.headers || !cache.headers.length){
+    thead.innerHTML=''; tbody.innerHTML='<tr><td class="no-data">डेटा नाही.</td></tr>'; return;
+  }
+  thead.innerHTML = '<tr>'+cache.headers.map(function(h){return '<th>'+(h||'')+'</th>';}).join('')+'</tr>';
+  var s=(search||'').toLowerCase();
+  var rows = cache.rows.filter(function(r){ return !s || r.join(' ').toLowerCase().indexOf(s)!==-1; });
+  if(!rows.length){ tbody.innerHTML='<tr><td colspan="'+cache.headers.length+'" class="no-data">काही सापडलं नाही.</td></tr>'; return; }
+  tbody.innerHTML = rows.map(function(r){
+    return '<tr>'+cache.headers.map(function(h,i){ return '<td>'+(r[i]||'')+'</td>'; }).join('')+'</tr>';
+  }).join('');
+}
+
+/* ============================================================
+   DASHBOARD
+   ============================================================ */
+function renderDashboard(){
+  document.getElementById('d-form').textContent = formCache.rows ? formCache.rows.length : 0;
+  document.getElementById('d-keys').textContent = allKeys.length;
+  document.getElementById('d-pay').textContent = allReceipts.length;
+  var totalAmt = allReceipts.reduce(function(s,r){ return s + (parseFloat((r.amount||'0').toString().replace(/[^0-9.]/g,''))||0); },0);
+  document.getElementById('d-amt').textContent = '₹'+totalAmt.toLocaleString('en-IN');
+  document.getElementById('d-complaint').textContent = compCache.rows ? compCache.rows.length : 0;
+  document.getElementById('lastSyncTxt').textContent = config.lastSync ? ('शेवटचं Sync: '+new Date(config.lastSync).toLocaleString('mr-IN')) : 'अजून Sync केलेले नाही';
+
+  var master = buildMasterList();
+  var noKey=0, noPay=0, openComplaint=0;
+  master.forEach(function(m){
+    if (m.formFilled && !m.keyGiven) noKey++;
+    if (m.keyGiven && !m.paymentDone) noPay++;
+  });
+  if (compCache.rows){
+    var statusIdx = config.complaintMap ? config.complaintMap.status : -1;
+    compCache.rows.forEach(function(r){
+      var st = (statusIdx>=0 ? (r[statusIdx]||'') : '').toLowerCase();
+      if (!st || (st.indexOf('resolved')===-1 && st.indexOf('closed')===-1 && st.indexOf('सोडवल')===-1 && st.indexOf('पूर्ण')===-1)) openComplaint++;
+    });
+  }
+  document.getElementById('f-noKey').textContent = noKey;
+  document.getElementById('f-noPay').textContent = noPay;
+  document.getElementById('f-openComplaint').textContent = openComplaint;
+}
+
+/* ============================================================
+   MASTER LIST (merge everything by mobile number, fallback name)
+   ============================================================ */
+function buildMasterList(){
+  var byMobile = {};
+  function getRec(mobile, name){
+    var key = mobile || ('name:'+normName(name));
+    if(!byMobile[key]) byMobile[key] = {mobile:mobile||'', name:name||'', village:'', formFilled:false, keyGiven:false, keyVal:'', paymentDone:false, amount:0, receiptNo:'', complaint:false, complaintText:'', refName:'', refMobile:''};
+    return byMobile[key];
+  }
+
+  // Form sheet
+  if (formCache.rows && config.formMap){
+    var fm = config.formMap;
+    formCache.rows.forEach(function(r){
+      var mob = fm.mobile>=0 ? normMobile(r[fm.mobile]) : '';
+      var nm  = fm.name>=0 ? r[fm.name] : '';
+      var rec = getRec(mob, nm);
+      rec.formFilled = true;
+      if(!rec.name && nm) rec.name = nm;
+      if(fm.village>=0 && r[fm.village]) rec.village = r[fm.village];
+      if(fm.refName>=0 && r[fm.refName] && !rec.refName) rec.refName = r[fm.refName];
+      if(fm.refMobile>=0 && r[fm.refMobile] && !rec.refMobile) rec.refMobile = normMobile(r[fm.refMobile]) || r[fm.refMobile];
+    });
+  }
+
+  // Keys
+  allKeys.forEach(function(k){
+    var mob = normMobile(k.mobile);
+    var nm = k.customer || k.gpName;
+    var rec = getRec(mob, nm);
+    rec.keyGiven = true;
+    rec.keyVal = k.key;
+    if(!rec.name && nm) rec.name = nm;
+    if(!rec.village && k.gpName) rec.village = k.gpName;
+  });
+
+  // Payments / receipts
+  allReceipts.forEach(function(p){
+    var mob = normMobile(p.mobile);
+    var rec = getRec(mob, p.name);
+    rec.paymentDone = true;
+    rec.amount += (parseFloat((p.amount||'0').toString().replace(/[^0-9.]/g,''))||0);
+    rec.receiptNo = p.no;
+    if(!rec.name && p.name) rec.name = p.name;
+    if(!rec.village && p.village) rec.village = p.village;
+  });
+
+  // Complaints
+  if (compCache.rows && config.complaintMap){
+    var cm = config.complaintMap;
+    compCache.rows.forEach(function(r){
+      var mob = cm.mobile>=0 ? normMobile(r[cm.mobile]) : '';
+      var nm  = cm.name>=0 ? r[cm.name] : '';
+      var rec = getRec(mob, nm);
+      rec.complaint = true;
+      rec.complaintText = cm.text>=0 ? (r[cm.text]||'') : '';
+      if(!rec.name && nm) rec.name = nm;
+    });
+  }
+
+  return Object.keys(byMobile).map(function(k){ return byMobile[k]; });
+}
+
+function renderMaster(){
+  var master = buildMasterList();
+  var s = (document.getElementById('masterSearch').value||'').toLowerCase();
+  if (s){
+    master = master.filter(function(m){
+      return (m.name||'').toLowerCase().indexOf(s)!==-1 ||
+             (m.mobile||'').indexOf(s)!==-1 ||
+             (m.village||'').toLowerCase().indexOf(s)!==-1 ||
+             (m.refName||'').toLowerCase().indexOf(s)!==-1 ||
+             (m.refMobile||'').indexOf(s)!==-1;
+    });
+  }
+  var tbody = document.getElementById('masterTable');
+  if(!master.length){ tbody.innerHTML='<tr><td colspan="11" class="no-data">डेटा नाही.</td></tr>'; return; }
+  function badge(v){ return v ? '<span class="badge b-yes">✔ होय</span>' : '<span class="badge b-no">✘ नाही</span>'; }
+  tbody.innerHTML = master.map(function(m,i){
+    return '<tr>'+
+      '<td>'+(i+1)+'</td>'+
+      '<td class="mono">'+(m.mobile||'—')+'</td>'+
+      '<td>'+(m.name||'—')+'</td>'+
+      '<td>'+(m.village||'—')+'</td>'+
+      '<td>'+badge(m.formFilled)+'</td>'+
+      '<td>'+(m.keyGiven ? '<span class="badge b-yes mono">'+m.keyVal+'</span>' : badge(false))+'</td>'+
+      '<td>'+(m.paymentDone ? '<span class="badge b-yes">₹'+m.amount.toLocaleString('en-IN')+'</span>' : badge(false))+'</td>'+
+      '<td>'+(m.receiptNo||'—')+'</td>'+
+      '<td>'+(m.complaint ? '<span class="badge b-no" title="'+(m.complaintText||'').replace(/"/g,'')+'">⚠ आहे</span>' : badge(false))+'</td>'+
+      '<td>'+(m.refName||'—')+'</td>'+
+      '<td class="mono">'+(m.refMobile||'—')+'</td>'+
+    '</tr>';
+  }).join('');
+}
+function exportMasterCSV(){
+  var master = buildMasterList();
+  if(!master.length){ alert('डेटा नाही.'); return; }
+  var csv = 'Mobile,Name,Village,FormFilled,KeyGiven,Key,PaymentDone,Amount,ReceiptNo,Complaint,ReferralName,ReferralMobile\n';
+  master.forEach(function(m){
+    csv += [m.mobile,m.name,m.village,m.formFilled,m.keyGiven,m.keyVal,m.paymentDone,m.amount,m.receiptNo,m.complaint,m.refName,m.refMobile]
+      .map(function(v){ return '"'+String(v==null?'':v).replace(/"/g,'""')+'"'; }).join(',') + '\n';
+  });
+  downloadCSV(csv, 'gp_master_list_'+todayStr()+'.csv');
+}
+
+/* ============================================================
+   KEY GENERATOR  (same algorithm as keygen.html — compatible)
+   ============================================================ */
+function getSecret(){ return document.getElementById('secretInput').value.trim() || ''; }
+function simpleHash(str){ var h=5381; for(var i=0;i<str.length;i++){ h=((h<<5)+h+str.charCodeAt(i))&0xFFFFFF; } return Math.abs(h); }
+function toB36_4(n){ return ((n % (36*36*36*36)) + 36*36*36*36).toString(36).toUpperCase().slice(-4); }
+function generateSingleKey(gpCode, machineCode){
+  var p1 = gpCode.toUpperCase().replace(/[^A-Z0-9]/g,'').padEnd(4,'X').substring(0,4);
+  var p2 = machineCode.toUpperCase().replace(/[^A-Z0-9]/g,'').padEnd(6,'X').substring(0,6);
+  var rand = Math.floor(Math.random()*36*36*36*36);
+  var p3 = toB36_4(rand);
+  var p4 = toB36_4(simpleHash(p1+p2+p3+getSecret()));
+  return p1+'-'+p2+'-'+p3+'-'+p4;
+}
+function updateGPCode(){
+  var name = document.getElementById('gpName').value.toUpperCase().replace(/[^A-Z0-9]/g,'');
+  document.getElementById('gpCode').value = name.substring(0,4).padEnd(4,'X');
+}
+function generateKeys(){
+  var gpCode = document.getElementById('gpCode').value.toUpperCase().replace(/[^A-Z0-9]/g,'').padEnd(4,'X').substring(0,4);
+  var gpName = document.getElementById('gpName').value.trim() || gpCode;
+  var machineCode = document.getElementById('machineCode').value.toUpperCase().replace(/[^A-Z0-9]/g,'');
+  var customer = document.getElementById('customerName').value.trim();
+  var mobile = normMobile(document.getElementById('customerMobile').value);
+  if(!gpCode || gpCode.length<4){ alert('ग्रामपंचायत नाव टाका'); return; }
+  if(!machineCode || machineCode.length!==6){ alert('Customer चा Machine Code (6 अक्षरी) टाका.'); return; }
+  var key = generateSingleKey(gpCode, machineCode);
+  var rec = {key:key, gpName:gpName, gpCode:gpCode, machineCode:machineCode, customer: customer||gpName, mobile:mobile, generatedAt:new Date().toISOString()};
+  allKeys.unshift(rec);
+  lsSet(LS_KEYS, allKeys);
+  renderKeyTable(); renderDashboard(); renderMaster();
+  var out = document.getElementById('genOutput');
+  out.style.display='block';
+  document.getElementById('keysGenerated').innerHTML =
+    '<div class="key-out-box"><div class="lbl">'+rec.gpName+' — Machine Code '+rec.machineCode+(rec.mobile?(' — 📱 '+rec.mobile):'')+' — Lifetime</div>'+
+    '<div class="kv">'+rec.key+'</div>'+
+    '<div style="text-align:center"><button class="btn btn-copy" onclick="copyKey(\''+rec.key+'\',this)">📋 Copy</button></div></div>';
+}
+function copyKey(key, btn){
+  navigator.clipboard.writeText(key).then(function(){
+    btn.textContent='✅ Copied!'; btn.classList.add('copied');
+    setTimeout(function(){ btn.textContent='📋 Copy'; btn.classList.remove('copied'); },2000);
+  });
+}
+function renderKeyTable(){
+  document.getElementById('kg-total').textContent = allKeys.length;
+  document.getElementById('kg-machines').textContent = new Set(allKeys.map(function(k){return k.machineCode;}).filter(Boolean)).size;
+  var s = (document.getElementById('kgSearch').value||'').toLowerCase();
+  var filtered = allKeys.filter(function(r){
+    return (r.key||'').toLowerCase().indexOf(s)!==-1 || (r.gpName||'').toLowerCase().indexOf(s)!==-1 ||
+      (r.customer||'').toLowerCase().indexOf(s)!==-1 || (r.machineCode||'').toLowerCase().indexOf(s)!==-1 || (r.mobile||'').indexOf(s)!==-1;
+  });
+  var tb = document.getElementById('keysTable');
+  if(!filtered.length){ tb.innerHTML='<tr><td colspan="8" class="no-data">Keys नाहीत.</td></tr>'; return; }
+  tb.innerHTML = filtered.map(function(r){
+    var d = new Date(r.generatedAt).toLocaleDateString('mr-IN');
+    return '<tr><td>'+(allKeys.indexOf(r)+1)+'</td><td class="mono" style="color:#FFD700">'+r.key+'</td><td>'+(r.gpName||'—')+'</td>'+
+      '<td>'+(r.customer||'—')+'</td><td class="mono">'+(r.mobile||'—')+'</td>'+
+      '<td style="color:#4CAF50;font-weight:700">'+(r.machineCode||'—')+'</td><td>'+d+'</td>'+
+      '<td><button class="btn btn-copy" onclick="copyKey(\''+r.key+'\',this)">Copy</button></td></tr>';
+  }).join('');
+}
+function exportKeysCSV(){
+  if(!allKeys.length){ alert('Keys नाहीत'); return; }
+  var csv = 'Sr,Key,GP Name,Customer,Mobile,Machine Code,Generated At\n';
+  allKeys.forEach(function(r,i){
+    csv += [i+1,r.key,r.gpName||'',r.customer||'',r.mobile||'',r.machineCode||'', new Date(r.generatedAt).toLocaleDateString('en-IN')]
+      .map(function(v){ return '"'+String(v).replace(/"/g,'""')+'"'; }).join(',')+'\n';
+  });
+  downloadCSV(csv, 'gp_product_keys_'+todayStr()+'.csv');
+}
+function clearAllKeys(){
+  if(confirm('सर्व Keys delete करायच्या? हे undo होणार नाही!')){
+    allKeys=[]; lsSet(LS_KEYS, allKeys);
+    renderKeyTable(); renderDashboard(); renderMaster();
+    document.getElementById('genOutput').style.display='none';
+  }
+}
+
+// फक्त पावती/पेमेंट नोंदी मिटवते (Keys, फॉर्म प्रतिसाद, तक्रारी तशाच राहतात) — पावती क्रमांक परत 1 पासून सुरू होतो
+function clearAllReceipts(){
+  if(!confirm('⚠️ सगळ्या पावती/पेमेंट नोंदी कायमच्या मिटवल्या जातील. हे undo होणार नाही. पुढे जायचं का?')) return;
+  allReceipts = [];
+  localStorage.removeItem(LS_RECEIPTS);
+  localStorage.removeItem(LS_NEXT_NO);
+  renderPayTable(); renderDashboard(); renderMaster();
+  alert('✅ सगळ्या पावती नोंदी मिटवल्या. पावती क्रमांक पुन्हा 1 पासून सुरू होईल.');
+}
+
+/* ============================================================
+   PAYMENT / RECEIPT  (compatible with pavati_v3.html storage)
+   ============================================================ */
+function formatReceiptNo(n){ return 'GPS-2026-'+String(n).padStart(3,'0'); }
+function nextReceiptPreview(){
+  var n = parseInt(localStorage.getItem(LS_NEXT_NO),10) || 1;
+  return formatReceiptNo(n);
+}
+function addPayment(){
+  var name = document.getElementById('payName').value.trim();
+  var mobile = normMobile(document.getElementById('payMobile').value);
+  var amount = document.getElementById('payAmount').value.trim();
+  if(!name){ alert('ग्राहकाचे नाव टाका'); return; }
+  if(!mobile){ alert('योग्य 10-अंकी मोबाईल नंबर टाका'); return; }
+  if(!amount || isNaN(parseFloat(amount))){ alert('रक्कम बरोबर टाका'); return; }
+  var n = parseInt(localStorage.getItem(LS_NEXT_NO),10) || 1;
+  var rec = {
+    no: formatReceiptNo(n),
+    date: document.getElementById('payDate').value || new Date().toISOString().slice(0,10),
+    name: name,
+    village: document.getElementById('payVillage').value.trim(),
+    taluka: document.getElementById('payTaluka').value.trim(),
+    jilha: document.getElementById('payJilha').value.trim(),
+    mobile: mobile,
+    amount: amount,
+    amountWords: '',
+    payType: document.getElementById('payType').value
+  };
+  allReceipts.push(rec);
+  lsSet(LS_RECEIPTS, allReceipts);
+  localStorage.setItem(LS_NEXT_NO, String(n+1));
+  ['payName','payVillage','payTaluka','payJilha','payMobile','payAmount'].forEach(function(id){ document.getElementById(id).value=''; });
+  document.getElementById('payNo').value = nextReceiptPreview();
+  renderPayTable(); renderDashboard(); renderMaster();
+  alert('नोंद जतन झाली — पावती क्र. '+rec.no);
+}
+function renderPayTable(){
+  var s = (document.getElementById('paySearch').value||'').toLowerCase();
+  var list = allReceipts.slice().reverse().filter(function(r){
+    return !s || (r.name||'').toLowerCase().indexOf(s)!==-1 || (r.mobile||'').indexOf(s)!==-1 || (r.village||'').toLowerCase().indexOf(s)!==-1 || (r.no||'').toLowerCase().indexOf(s)!==-1;
+  });
+  var tbody = document.getElementById('payTable');
+  var total = allReceipts.reduce(function(s,r){ return s+(parseFloat((r.amount||'0').toString().replace(/[^0-9.]/g,''))||0); },0);
+  document.getElementById('payTotalTxt').textContent = 'एकूण: '+allReceipts.length+' | जमा रक्कम: ₹'+total.toLocaleString('en-IN');
+  if(!list.length){ tbody.innerHTML='<tr><td colspan="10" class="no-data">नोंदी नाहीत.</td></tr>'; return; }
+  tbody.innerHTML = list.map(function(r){
+    return '<tr><td>'+r.no+'</td><td>'+(r.date||'—')+'</td><td>'+(r.name||'—')+'</td><td>'+(r.village||'—')+'</td>'+
+      '<td>'+(r.taluka||'—')+'</td><td>'+(r.jilha||'—')+'</td>'+
+      '<td class="mono">'+(r.mobile||'—')+'</td><td>₹'+(r.amount||0)+'</td><td>'+(r.payType||'—')+'</td>'+
+      '<td><button class="btn btn-gen" style="padding:4px 10px;font-size:11px;" onclick="printReceiptByNo(\''+r.no+'\')">🖨️ प्रिंट पावती</button></td></tr>';
+  }).join('');
+}
+function exportPayCSV(){
+  if(!allReceipts.length){ alert('नोंदी नाहीत'); return; }
+  var csv = 'ReceiptNo,Date,Name,Village,Taluka,Jilha,Mobile,Amount,PayType\n';
+  allReceipts.forEach(function(r){
+    csv += [r.no,r.date,r.name,r.village,r.taluka,r.jilha,r.mobile,r.amount,r.payType]
+      .map(function(v){ return '"'+String(v||'').replace(/"/g,'""')+'"'; }).join(',')+'\n';
+  });
+  downloadCSV(csv, 'gp_payments_'+todayStr()+'.csv');
+}
+
+// पेमेंट नोंदीतून थेट अधिकृत छापील पावती उघडून, माहिती भरून प्रिंट करते
+function printReceiptByNo(no){
+  var r = allReceipts.find(function(x){ return x.no === no; });
+  if(!r) return;
+  if(window.gpBridge && window.gpBridge.printReceipt){
+    window.gpBridge.printReceipt(r);
+  } else {
+    alert('हे फीचर फक्त इन्स्टॉल केलेल्या सॉफ्टवेअरमध्येच चालतं.');
+  }
+}
+
+/* ============================================================
+   BACKUP (everything, including sheet config)
+   ============================================================ */
+function exportAllBackup(){
+  var data = {
+    exportedAt: new Date().toISOString(),
+    receipts: allReceipts,
+    keys: allKeys,
+    config: config,
+    formCache: formCache,
+    compCache: compCache,
+    nextReceiptNo: localStorage.getItem(LS_NEXT_NO) || '1'
+  };
+  downloadFile(JSON.stringify(data,null,2), 'gp_control_panel_backup_'+todayStr()+'.json', 'application/json');
+}
+// Trial दरम्यान केलेल्या सगळ्या नोंदी (पावत्या, Keys, फॉर्म/तक्रारी) मिटवते.
+// सेटिंग्स (Sheet लिंक्स, Column Mapping) मात्र तशाच राहतात.
+function clearAllData(){
+  if(!confirm('⚠️ सगळ्या पावत्या, Keys आणि फॉर्म/तक्रारींच्या नोंदी कायमच्या मिटवल्या जातील.\n\nहे पुन्हा मिळवता येणार नाही. पुढे जायचं का?')) return;
+  if(!confirm('पुन्हा एकदा खात्री करा — खरंच सगळा डेटा मिटवायचा आहे का?')) return;
+
+  allReceipts = [];
+  allKeys = [];
+  formCache = [];
+  compCache = [];
+
+  localStorage.removeItem(LS_RECEIPTS);
+  localStorage.removeItem(LS_KEYS);
+  localStorage.removeItem(LS_FORM_CACHE);
+  localStorage.removeItem(LS_COMP_CACHE);
+  localStorage.removeItem(LS_NEXT_NO);
+
+  renderPayTable(); renderKeyTable(); renderFormTable();
+  renderComplaintTable(); renderMaster(); renderDashboard();
+
+  alert('✅ सगळा जुना डेटा मिटवला. पावती क्रमांक पुन्हा 1 पासून सुरू होईल.');
+}
+
+function importAllBackup(file){
+  if(!file) return;
+  var reader = new FileReader();
+  reader.onload = function(e){
+    try{
+      var data = JSON.parse(e.target.result);
+      if(data.receipts) allReceipts = mergeByKey(allReceipts, data.receipts, 'no');
+      if(data.keys) allKeys = mergeByKey(allKeys, data.keys, 'key');
+      if(data.config) config = Object.assign({}, config, data.config);
+      if(data.formCache) formCache = data.formCache;
+      if(data.compCache) compCache = data.compCache;
+      lsSet(LS_RECEIPTS, allReceipts); lsSet(LS_KEYS, allKeys); lsSet(LS_CONFIG, config);
+      lsSet(LS_FORM_CACHE, formCache); lsSet(LS_COMP_CACHE, compCache);
+      if(data.nextReceiptNo){
+        var cur = parseInt(localStorage.getItem(LS_NEXT_NO),10)||1;
+        var inc = parseInt(data.nextReceiptNo,10)||1;
+        if(inc>cur) localStorage.setItem(LS_NEXT_NO, String(inc));
+      }
+      initAll();
+      alert('Backup यशस्वीरित्या पुन्हा आणलं.');
+    }catch(err){ alert('ही फाईल वाचता आली नाही.'); }
+    document.getElementById('importFileInput').value='';
+  };
+  reader.readAsText(file);
+}
+function mergeByKey(existing, incoming, keyField){
+  incoming.forEach(function(rec){
+    var idx = existing.findIndex(function(r){ return r[keyField]===rec[keyField]; });
+    if(idx>=0) existing[idx]=rec; else existing.push(rec);
+  });
+  return existing;
+}
+
+/* ============================================================
+   HELPERS
+   ============================================================ */
+function todayStr(){ return new Date().toISOString().slice(0,10); }
+function downloadCSV(csv, filename){ downloadFile('\uFEFF'+csv, filename, 'text/csv;charset=utf-8'); }
+function downloadFile(content, filename, mime){
+  var blob = new Blob([content], {type:mime});
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href=url; a.download=filename; document.body.appendChild(a); a.click();
+  document.body.removeChild(a); URL.revokeObjectURL(url);
+}
+
+/* ============================================================
+   INIT
+   ============================================================ */
+function initAll(){
+  document.getElementById('cfgFormUrl').value = config.formUrl || '';
+  document.getElementById('cfgComplaintUrl').value = config.complaintUrl || '';
+  document.getElementById('formSheetLink').href = config.formUrl || '#';
+  document.getElementById('complaintSheetLink').href = config.complaintUrl || '#';
+  document.getElementById('payNo').value = nextReceiptPreview();
+  document.getElementById('payDate').value = todayStr();
+  renderMapBoxes();
+  renderDashboard();
+  renderMaster();
+  renderKeyTable();
+  renderPayTable();
+  renderFormTable();
+  renderComplaintTable();
+  if (config.formUrl || config.complaintUrl) syncSheets(false);
+}
+</script>
+<script src="lib/firebase-app-compat.js"></script>
+<script src="lib/firebase-auth-compat.js"></script>
+<script src="lib/firebase-firestore-compat.js"></script>
+<script src="lib/html2canvas.min.js"></script>
+<script src="cloudsync.js"></script>
+<script src="mobile-shim.js"></script>
+</body>
+</html>

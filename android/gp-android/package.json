@@ -1,0 +1,19 @@
+{
+  "name": "gp-software-mobile",
+  "version": "1.0.0",
+  "description": "GP Software — मोबाईल (ग्रामपंचायत) Android app",
+  "private": true,
+  "dependencies": {
+    "@capacitor/android": "^8.5.2",
+    "@capacitor/app": "^8.1.1",
+    "@capacitor/browser": "^8.0.4",
+    "@capacitor/cli": "^8.5.2",
+    "@capacitor/core": "^8.5.2",
+    "@capacitor/filesystem": "^8.1.3",
+    "@capacitor/share": "^8.0.2",
+    "html2canvas": "^1.4.1"
+  },
+  "devDependencies": {
+    "@capacitor/assets": "^3.0.5"
+  }
+}
