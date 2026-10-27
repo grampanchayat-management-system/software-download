@@ -29,12 +29,19 @@
   <div class="wrap">
     <div class="eyebrow-line"></div>
     <h1 style="font-size:clamp(26px,3.8vw,38px)">सॉफ्टवेअर Download करा</h1>
-    <p class="tag">खालील फाईल याच वेबसाईटवर ठेवलेली आहे — थेट डाउनलोड होईल.</p>
+    <p class="tag">खालील फाईल याच वेबसाईटवर ठेवलेली आहे — थेट डाउनलोड होईल.<br><b>हे सॉफ्टवेअर फक्त ग्रामपंचायतींसाठी आहे.</b></p>
   </div>
 </section>
 
 <section class="block">
   <div class="wrap">
+    <!-- ── महत्त्वाची सूचना: फक्त ग्रामपंचायतींसाठी ── -->
+    <div id="gpNotice" style="max-width:640px;margin:0 auto 24px;background:#fff6e5;border:1px solid #e0a100;border-left:8px solid #e0a100;border-radius:8px;padding:16px 18px;color:#5b3a00;line-height:1.75">
+      <div style="font-weight:700;font-size:17px;margin-bottom:6px">⚠️ महत्त्वाची सूचना</div>
+      <div>हे सॉफ्टवेअर <b>फक्त ग्रामपंचायतींच्या कामकाजासाठी</b> तयार केलेले आहे. खाजगी, वैयक्तिक किंवा व्यावसायिक वापरासाठी नाही.</div>
+      <div style="margin-top:6px"><b>ग्रामपंचायत सोडून इतर कोणीही (व्यक्ती, खाजगी संस्था, दुकान, एजन्सी इ.) हे सॉफ्टवेअर Download करू नये.</b></div>
+    </div>
+
     <!-- ── Download च्या आधी माहिती फॉर्म — भरल्याशिवाय Download बटणं दिसत नाहीत ── -->
     <div class="form-card" id="gpVerifyCard" style="max-width:460px;margin:0 auto 28px">
       <h3 style="font-size:16px;margin-bottom:18px">Download साठी थोडी माहिती भरा</h3>
@@ -51,6 +58,24 @@
         <input type="text" id="gpDistrict" placeholder="उदा. सोलापूर">
       </div>
       <div class="f-group">
+        <label>आपले नाव *</label>
+        <input type="text" id="gpPersonName" placeholder="उदा. रमेश पाटील">
+      </div>
+      <div class="f-group">
+        <label>पदनाम *</label>
+        <select id="gpDesignation" onchange="gpDesigChanged()" style="width:100%;padding:11px 12px;border:1px solid #cfcfcf;border-radius:8px;font:inherit;background:#fff;color:inherit">
+          <option value="">— पदनाम निवडा —</option>
+          <option value="सरपंच">सरपंच</option>
+          <option value="उपसरपंच">उपसरपंच</option>
+          <option value="ग्रामपंचायत अधिकारी">ग्रामपंचायत अधिकारी (ग्रामसेवक / ग्रामविकास अधिकारी)</option>
+          <option value="ग्रामपंचायत सदस्य">ग्रामपंचायत सदस्य</option>
+          <option value="संगणक परिचालक">संगणक परिचालक</option>
+          <option value="लिपिक">लिपिक</option>
+          <option value="__other">इतर (ग्रामपंचायतीतील)</option>
+        </select>
+        <input type="text" id="gpDesignationOther" placeholder="पदनाम लिहा" style="display:none;margin-top:8px">
+      </div>
+      <div class="f-group">
         <label>मोबाईल नंबर *</label>
         <input type="tel" id="gpMobile" maxlength="10" placeholder="10 अंकी मोबाईल नंबर">
       </div>
@@ -65,11 +90,16 @@
         <label>रेफरल मोबाईल नंबर (PhonePe)</label>
         <input type="tel" id="gpReferralMobile" maxlength="10" placeholder="10 अंकी मोबाईल नंबर">
       </div>
+      <label style="display:flex;gap:10px;align-items:flex-start;margin:16px 0 6px;font-size:14px;line-height:1.55;cursor:pointer">
+        <input type="checkbox" id="gpDeclare" style="margin-top:4px;flex:none">
+        <span>मी ग्रामपंचायतीचा अधिकृत सदस्य / कर्मचारी आहे आणि हे सॉफ्टवेअर <b>फक्त ग्रामपंचायतीच्या कामकाजासाठी</b> वापरणार आहे. *</span>
+      </label>
       <button type="button" class="btn btn-primary btn-submit" id="gpSubmitBtn" onclick="gpSubmitVerify()">✅ Download साठी पुढे जा</button>
       <div class="form-msg" id="gpFormMsg"></div>
     </div>
 
     <div class="dl-list" id="gpDownloadList" style="display:none">
+      <div style="margin-bottom:16px;padding:10px 14px;background:#fff6e5;border:1px solid #e0a100;border-radius:8px;color:#5b3a00;font-size:14px;line-height:1.6">⚠️ हे सॉफ्टवेअर <b>फक्त ग्रामपंचायतींसाठी</b> आहे. ग्रामपंचायत सोडून इतरांनी Download करू नये.</div>
       <div class="dl-item">
         <div class="info">
           <b>Grampanchayat Software — Setup.exe</b>
@@ -134,11 +164,22 @@ function gpShowDownloads(){
   }catch(e){}
 })();
 
+function gpDesigChanged(){
+  var sel = document.getElementById('gpDesignation');
+  var other = document.getElementById('gpDesignationOther');
+  other.style.display = (sel.value === '__other') ? 'block' : 'none';
+  if(sel.value !== '__other') other.value = '';
+}
+
 function gpSubmitVerify(){
   var name = document.getElementById('gpName').value.trim();
   var taluka = document.getElementById('gpTaluka').value.trim();
   var district = document.getElementById('gpDistrict').value.trim();
   var mobile = document.getElementById('gpMobile').value.trim();
+  var personName = document.getElementById('gpPersonName').value.trim();
+  var desigSel = document.getElementById('gpDesignation').value;
+  var designation = (desigSel === '__other') ? document.getElementById('gpDesignationOther').value.trim() : desigSel;
+  var declared = document.getElementById('gpDeclare').checked;
   var referralName = document.getElementById('gpReferralName').value.trim();
   var referralMobile = document.getElementById('gpReferralMobile').value.trim();
   var msg = document.getElementById('gpFormMsg');
@@ -150,9 +191,16 @@ function gpSubmitVerify(){
   msg.className = 'form-msg';
   msg.style.display = 'none';
 
-  if(!name || !taluka || !district || !mobileOk){
+  if(!name || !taluka || !district || !personName || !designation || !mobileOk){
     msg.className = 'form-msg err';
-    msg.textContent = 'कृपया सर्व रकाने बरोबर भरा (मोबाईल नंबर 10 अंकी हवा).';
+    msg.textContent = 'कृपया सर्व रकाने बरोबर भरा (नाव, पदनाम आणि 10 अंकी मोबाईल नंबर आवश्यक).';
+    msg.style.display = 'block';
+    return;
+  }
+
+  if(!declared){
+    msg.className = 'form-msg err';
+    msg.textContent = 'हे सॉफ्टवेअर फक्त ग्रामपंचायतींसाठी आहे — पुढे जाण्यासाठी वरील घोषणेवर ✔ करा.';
     msg.style.display = 'block';
     return;
   }
@@ -184,6 +232,8 @@ function gpSubmitVerify(){
   fd.append('taluka', taluka);
   fd.append('district', district);
   fd.append('mobile', mobile);
+  fd.append('personName', personName);
+  fd.append('designation', designation);
   fd.append('referralName', referralName);
   fd.append('referralMobile', referralMobile);
 
