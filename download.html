@@ -110,6 +110,13 @@
       </div>
       <div class="dl-item" style="margin-top:16px">
         <div class="info">
+          <b>Grampanchayat Software — Setup (Windows 7).exe</b>
+          <span>Windows 7 साठी (जुन्या संगणकांसाठी)</span>
+        </div>
+        <a class="btn btn-primary" id="win7DownloadBtn" href="#" style="padding:10px 20px;font-size:13.5px">⬇️ Download</a>
+      </div>
+      <div class="dl-item" style="margin-top:16px">
+        <div class="info">
           <b>Mobile App — Setup</b>
           <span>Android • ग्रामपंचायत कर्मचाऱ्यांसाठी मोबाईल अ‍ॅप</span>
         </div>
@@ -139,6 +146,12 @@ var DOWNLOAD_URL = 'https://github.com/grampanchayat-management-system/software-
 
 document.getElementById('downloadBtn').href = DOWNLOAD_URL;
 document.getElementById('downloadBtn').setAttribute('download','');
+
+// ── Windows 7 साठी Setup ──
+// GitHub Releases वर ही फाईल अपलोड करा आणि खालच्या लिंकमधील फाईलचं नाव तसंच ठेवा (किंवा तुमच्या फाईलच्या नावाप्रमाणे बदला)
+var WIN7_DOWNLOAD_URL = 'https://github.com/grampanchayat-management-system/software-download/releases/download/v1.0.0/GrampanchayatSoftwareSetup-Win7.exe';
+document.getElementById('win7DownloadBtn').href = WIN7_DOWNLOAD_URL;
+document.getElementById('win7DownloadBtn').setAttribute('download','');
 
 // ── Mobile App ──
 // GitHub Releases वर GramPanchayat.apk (झिप नाही, थेट APK) अपलोड केल्यावरच ही लिंक चालेल
