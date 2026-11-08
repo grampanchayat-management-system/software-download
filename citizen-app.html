@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="mr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>नागरिक अ‍ॅप — ग्रामपंचायत सॉफ्टवेअर</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="letterhead">
+  <div class="wrap">
+    <div class="brand"><span class="seal">🏛️</span> ग्रामपंचायत सॉफ्टवेअर</div>
+    <div class="nav-tabs">
+      <a href="index.html">होम</a>
+      <a href="features.html">वैशिष्ट्ये</a>
+      <a href="download.html">Download</a>
+      <a href="citizen-app.html" class="active">नागरिक अ‍ॅप</a>
+      <a href="guide.html">मार्गदर्शन</a>
+      <a href="pricing.html">किंमत</a>
+      <a href="contact.html">संपर्क / तक्रार</a>
+    </div>
+  </div>
+</div>
+
+<section class="hero" style="padding:56px 0 50px">
+  <div class="wrap">
+    <div class="eyebrow-line"></div>
+    <h1 style="font-size:clamp(26px,3.8vw,38px)">नागरिक अ‍ॅप Download करा</h1>
+    <p class="tag">गावातील नागरिकांसाठी — मोबाईलवर इन्स्टॉल करून वापरा. कोणतीही माहिती भरण्याची गरज नाही.</p>
+  </div>
+</section>
+
+<section class="block">
+  <div class="wrap">
+    <div class="dl-list">
+      <div class="dl-item">
+        <div class="info">
+          <b>Citizen App — Setup</b>
+          <span>Android • नागरिकांसाठी अ‍ॅप</span>
+        </div>
+        <a class="btn btn-primary" id="citizenAppBtn" href="#" style="padding:10px 20px;font-size:13.5px">⬇️ Download</a>
+      </div>
+    </div>
+    <div style="max-width:560px;margin:24px auto 0;padding:14px 18px;background:#f5f5f6;border:1px solid var(--line);border-radius:10px;font-size:13.5px;line-height:1.75;color:var(--ink-soft)">
+      <b style="color:var(--graphite)">Install कसं करायचं:</b><br>
+      १) Download बटण दाबा — APK फाईल थेट मोबाईलमध्ये येईल (झिप उघडायची गरज नाही).<br>
+      २) Download झालेल्या फाईलवर टॅप करा. "Install unknown apps" असं विचारल्यास <b>Allow / परवानगी द्या</b> दाबा.<br>
+      ३) "Install" दाबा आणि झाल्यावर अ‍ॅप उघडा.
+    </div>
+    <div class="block-head" style="margin-top:40px;margin-bottom:0">
+      <p>Install करताना अडचण आल्यास — <a class="link-btn" href="contact.html" style="display:inline">संपर्क करा →</a></p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <a class="wa" href="https://wa.me/917990947511" target="_blank">💬 WhatsApp वर विचारा</a>
+    <div>ग्रामपंचायत सॉफ्टवेअर — सर्व हक्क राखीव</div>
+    <div class="fine">📧 gaikwadsu11@gmail.com &nbsp;|&nbsp; 📞 +91 79909 47511</div>
+  </div>
+</footer>
+
+<script>
+// ── बदलण्यासाठी इथेच ──
+// GitHub Releases वर MajhiGramPanchayat.apk (झिप नाही, थेट APK) अपलोड केल्यावरच ही लिंक चालेल
+var CITIZEN_APP_URL = 'https://github.com/grampanchayat-management-system/software-download/releases/download/v1.0.0/MajhiGramPanchayat.apk';
+
+document.getElementById('citizenAppBtn').href = CITIZEN_APP_URL;
+document.getElementById('citizenAppBtn').setAttribute('download','');
+</script>
+</body>
+</html>
