@@ -30,7 +30,7 @@
   <div class="wrap">
     <div class="eyebrow-line"></div>
     <h1 style="font-size:clamp(26px,3.8vw,38px)">सॉफ्टवेअर Download करा</h1>
-    <p class="tag">खालील फाईल याच वेबसाईटवर ठेवलेली आहे — थेट डाउनलोड होईल.<br><b>हे सॉफ्टवेअर फक्त ग्रामपंचायतींसाठी आहे.</b></p>
+    <p class="tag">७ दिवस मोफत Demo — ग्रामपंचायतीचे पत्र पाठवा; आमची मंजुरी मिळताच Download उघडेल.<br><b>हे सॉफ्टवेअर फक्त ग्रामपंचायतींसाठी आहे.</b></p>
   </div>
 </section>
 
@@ -43,25 +43,14 @@
       <div style="margin-top:6px"><b>ग्रामपंचायत सोडून इतर कोणीही (व्यक्ती, खाजगी संस्था, दुकान, एजन्सी इ.) हे सॉफ्टवेअर Download करू नये.</b></div>
     </div>
 
-    <!-- ── Download च्या आधी माहिती फॉर्म — भरल्याशिवाय Download बटणं दिसत नाहीत ── -->
+    <!-- ── अर्ज फॉर्म: पत्र जोडून पाठवा; मंजुरीनंतरच Download ── -->
     <div class="form-card" id="gpVerifyCard" style="max-width:460px;margin:0 auto 28px">
-      <h3 style="font-size:16px;margin-bottom:18px">Download साठी थोडी माहिती भरा</h3>
-      <div class="f-group">
-        <label>ग्रामपंचायतीचे नाव *</label>
-        <input type="text" id="gpName" placeholder="उदा. वरवडे ग्रामपंचायत">
-      </div>
-      <div class="f-group">
-        <label>तालुका *</label>
-        <input type="text" id="gpTaluka" placeholder="उदा. माढा">
-      </div>
-      <div class="f-group">
-        <label>जिल्हा *</label>
-        <input type="text" id="gpDistrict" placeholder="उदा. सोलापूर">
-      </div>
-      <div class="f-group">
-        <label>आपले नाव *</label>
-        <input type="text" id="gpPersonName" placeholder="उदा. रमेश पाटील">
-      </div>
+      <h3 style="font-size:16px;margin-bottom:6px">Demo साठी अर्ज करा</h3>
+      <p style="font-size:13.5px;line-height:1.7;color:#555;margin:0 0 16px">माहिती भरा व ग्रामपंचायतीच्या letterhead वरील पत्र जोडा. तपासणी करून मंजुरी दिल्यावरच Download मिळेल.</p>
+      <div class="f-group"><label>ग्रामपंचायतीचे नाव *</label><input type="text" id="gpName" placeholder="उदा. वरवडे ग्रामपंचायत"></div>
+      <div class="f-group"><label>तालुका *</label><input type="text" id="gpTaluka" placeholder="उदा. माढा"></div>
+      <div class="f-group"><label>जिल्हा *</label><input type="text" id="gpDistrict" placeholder="उदा. सोलापूर"></div>
+      <div class="f-group"><label>आपले नाव *</label><input type="text" id="gpPersonName" placeholder="उदा. रमेश पाटील"></div>
       <div class="f-group">
         <label>पदनाम *</label>
         <select id="gpDesignation" onchange="gpDesigChanged()" style="width:100%;padding:11px 12px;border:1px solid #cfcfcf;border-radius:8px;font:inherit;background:#fff;color:inherit">
@@ -76,48 +65,72 @@
         </select>
         <input type="text" id="gpDesignationOther" placeholder="पदनाम लिहा" style="display:none;margin-top:8px">
       </div>
-      <div class="f-group">
-        <label>मोबाईल नंबर *</label>
-        <input type="tel" id="gpMobile" maxlength="10" placeholder="10 अंकी मोबाईल नंबर">
-      </div>
+      <div class="f-group"><label>मोबाईल नंबर *</label><input type="tel" id="gpMobile" maxlength="10" placeholder="10 अंकी मोबाईल नंबर"></div>
+
       <div class="f-group" style="border-top:1px dashed #ccc;padding-top:14px;margin-top:6px">
-        <label style="font-weight:600">रेफरल माहिती (सॉफ्टवेअरची माहिती कोणी दिली?) — ऐच्छिक</label>
+        <label style="font-weight:600">ग्रामपंचायतीचे पत्र (letterhead, सही व शिक्क्यासह) *</label>
+        <div style="font-size:13px;line-height:1.7;color:#555;margin:4px 0 10px">ग्रामपंचायतीच्या letterhead वर सॉफ्टवेअर मागणीचे पत्र — <b>सरपंच / ग्रामसेवकाची सही व ग्रामपंचायतीचा शिक्का</b> असलेले. फोटो किंवा PDF चालेल.</div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <label class="btn btn-outline" style="cursor:pointer;padding:9px 16px;font-size:13.5px">📎 फाईल जोडा
+            <input type="file" id="gpLetterFile" accept="image/*,application/pdf" style="display:none" onchange="gpPick(this)">
+          </label>
+          <label class="btn btn-outline" style="cursor:pointer;padding:9px 16px;font-size:13.5px">📷 कॅमेराने फोटो घ्या
+            <input type="file" id="gpLetterCam" accept="image/*" capture="environment" style="display:none" onchange="gpPick(this)">
+          </label>
+        </div>
+        <div id="gpLetterName" style="font-size:13px;margin-top:8px;color:#124d2a"></div>
+        <details style="margin-top:10px;font-size:13px;line-height:1.7;color:#444">
+          <summary style="cursor:pointer;font-weight:600">पत्राचा नमुना बघा</summary>
+          <div style="background:#f5f5f6;border-radius:8px;padding:10px 12px;margin-top:6px">
+            प्रति, सचिन उत्तम गायकवाड<br>
+            विषय: ग्रामपंचायत सॉफ्टवेअर (Demo) मिळणेबाबत.<br>
+            महोदय, आमच्या ग्रामपंचायतीच्या कामकाजासाठी ग्रामपंचायत सॉफ्टवेअरचा Demo मिळावा ही विनंती. हे सॉफ्टवेअर फक्त ग्रामपंचायतीच्या कामकाजासाठीच वापरले जाईल.<br>
+            दिनांक: ____ &nbsp; सही: ____ (सरपंच / ग्रामसेवक) &nbsp; शिक्का: ग्रामपंचायत ____
+          </div>
+        </details>
       </div>
-      <div class="f-group">
-        <label>रेफरल नाव</label>
-        <input type="text" id="gpReferralName" placeholder="ज्यांनी माहिती दिली त्यांचे नाव">
-      </div>
-      <div class="f-group">
-        <label>रेफरल मोबाईल नंबर (PhonePe)</label>
-        <input type="tel" id="gpReferralMobile" maxlength="10" placeholder="10 अंकी मोबाईल नंबर">
-      </div>
+
+      <div class="f-group" style="border-top:1px dashed #ccc;padding-top:14px;margin-top:6px"><label style="font-weight:600">रेफरल माहिती (सॉफ्टवेअरची माहिती कोणी दिली?) — ऐच्छिक</label></div>
+      <div class="f-group"><label>रेफरल नाव</label><input type="text" id="gpReferralName" placeholder="ज्यांनी माहिती दिली त्यांचे नाव"></div>
+      <div class="f-group"><label>रेफरल मोबाईल नंबर (PhonePe)</label><input type="tel" id="gpReferralMobile" maxlength="10" placeholder="10 अंकी मोबाईल नंबर"></div>
       <label style="display:flex;gap:10px;align-items:flex-start;margin:16px 0 6px;font-size:14px;line-height:1.55;cursor:pointer">
         <input type="checkbox" id="gpDeclare" style="margin-top:4px;flex:none">
         <span>मी ग्रामपंचायतीचा अधिकृत सदस्य / कर्मचारी आहे आणि हे सॉफ्टवेअर <b>फक्त ग्रामपंचायतीच्या कामकाजासाठी</b> वापरणार आहे. *</span>
       </label>
-      <button type="button" class="btn btn-primary btn-submit" id="gpSubmitBtn" onclick="gpSubmitVerify()">✅ Download साठी पुढे जा</button>
+      <button type="button" class="btn btn-primary btn-submit" id="gpSubmitBtn" onclick="gpSubmitVerify()">📩 अर्ज पाठवा</button>
       <div class="form-msg" id="gpFormMsg"></div>
+      <div style="margin-top:14px;font-size:13.5px;text-align:center">आधी अर्ज केला आहे? <a href="#" onclick="gpShowStatus();return false" style="font-weight:700">स्थिती तपासा →</a></div>
     </div>
 
-    <div class="dl-list" id="gpDownloadList" style="display:none">
+    <!-- ── अर्जाची स्थिती ── -->
+    <div class="form-card" id="gpStatusCard" style="max-width:460px;margin:0 auto 28px;display:none">
+      <h3 style="font-size:16px;margin-bottom:12px">अर्जाची स्थिती</h3>
+      <div id="gpStatusText" style="font-size:14.5px;line-height:1.75;margin-bottom:14px"></div>
+      <div class="f-group"><label>अर्ज क्रमांक</label><input type="text" id="gpReqId" placeholder="उदा. A1B2C3"></div>
+      <div class="f-group"><label>अर्जात दिलेला मोबाईल नंबर</label><input type="tel" id="gpReqMobile" maxlength="10" placeholder="10 अंकी मोबाईल नंबर"></div>
+      <button type="button" class="btn btn-primary btn-submit" id="gpCheckBtn" onclick="gpCheckStatus()">🔄 स्थिती तपासा</button>
+      <div style="margin-top:12px;font-size:13.5px;text-align:center"><a href="#" onclick="gpShowForm();return false">← नवीन अर्ज</a> &nbsp;|&nbsp; <a href="https://wa.me/917990947511" target="_blank">💬 WhatsApp वर विचारा</a></div>
+    </div>
+
+    <div class="dl-list" id="gpDownloadList" style="display:none"><div style="margin-bottom:16px;padding:10px 14px;background:#e8f6ec;border:1px solid #2e9d57;border-radius:8px;color:#124d2a;font-size:14px">✅ तुमचा अर्ज मंजूर झाला आहे. खाली Demo (७ दिवस मोफत) Download करा.</div>
       <div style="margin-bottom:16px;padding:10px 14px;background:#fff6e5;border:1px solid #e0a100;border-radius:8px;color:#5b3a00;font-size:14px;line-height:1.6">⚠️ हे सॉफ्टवेअर <b>फक्त ग्रामपंचायतींसाठी</b> आहे. ग्रामपंचायत सोडून इतरांनी Download करू नये.</div>
       <div class="dl-item">
         <div class="info">
-          <b>Grampanchayat Software — Setup.exe</b>
+          <b>Demo Setup — Windows 10/11</b>
           <span>Windows 10/11 • आवृत्ती 1.0</span>
         </div>
         <a class="btn btn-primary" id="downloadBtn" href="#" style="padding:10px 20px;font-size:13.5px">⬇️ Download</a>
       </div>
       <div class="dl-item" style="margin-top:16px">
         <div class="info">
-          <b>Grampanchayat Software — Setup (Windows 7).exe</b>
+          <b>Demo Setup — Windows 7</b>
           <span>Windows 7 साठी (जुन्या संगणकांसाठी)</span>
         </div>
         <a class="btn btn-primary" id="win7DownloadBtn" href="#" style="padding:10px 20px;font-size:13.5px">⬇️ Download</a>
       </div>
       <div class="dl-item" style="margin-top:16px">
         <div class="info">
-          <b>Mobile App — Setup</b>
+          <b>Mobile App (Demo)</b>
           <span>Android • ग्रामपंचायत कर्मचाऱ्यांसाठी मोबाईल अ‍ॅप</span>
         </div>
         <a class="btn btn-primary" id="mobileAppBtn" href="#" style="padding:10px 20px;font-size:13.5px">⬇️ Download</a>
@@ -139,124 +152,116 @@
 
 <script>
 // ── बदलण्यासाठी इथेच ──
-// पर्याय १ (याच वेबसाईटवर फाईल ठेवली असल्यास — 100 MB च्या आत): खालचं तसंच ठेवा
-// var DOWNLOAD_URL = 'downloads/GrampanchayatSoftwareSetup.exe';
-// पर्याय २ (फाईल मोठी असल्यास GitHub Releases वापरा): वरची ओळ बंद करून ही चालू करा
-var DOWNLOAD_URL = 'https://github.com/grampanchayat-management-system/software-download/releases/download/v1.0.0/GrampanchayatSoftwareSetup.exe';
-
-document.getElementById('downloadBtn').href = DOWNLOAD_URL;
-document.getElementById('downloadBtn').setAttribute('download','');
-
-// ── Windows 7 साठी Setup ──
-// GitHub Releases वर ही फाईल अपलोड करा आणि खालच्या लिंकमधील फाईलचं नाव तसंच ठेवा (किंवा तुमच्या फाईलच्या नावाप्रमाणे बदला)
-var WIN7_DOWNLOAD_URL = 'https://github.com/grampanchayat-management-system/software-download/releases/download/v1.0.0/GrampanchayatSoftwareSetup-Win7.exe';
-document.getElementById('win7DownloadBtn').href = WIN7_DOWNLOAD_URL;
-document.getElementById('win7DownloadBtn').setAttribute('download','');
-
-// ── Mobile App ──
-// GitHub Releases वर GramPanchayat.apk (झिप नाही, थेट APK) अपलोड केल्यावरच ही लिंक चालेल
-var MOBILE_APP_URL  = 'https://github.com/grampanchayat-management-system/software-download/releases/download/v1.0.0/GramPanchayat.apk';
-
-document.getElementById('mobileAppBtn').href = MOBILE_APP_URL;
-document.getElementById('mobileAppBtn').setAttribute('download','');
-
-// ── बदलण्यासाठी इथेच ──
-// खालची Web App URL तुमच्या Google Apps Script Deploy मधून मिळालेल्या लिंकने बदला
-// (उदा. https://script.google.com/macros/s/AKfycb..../exec)
+// Code.gs नवीन Deploy केल्यावर मिळालेली Web App URL इथे टाका.
+// Download लिंका HTML मध्ये नाहीत — त्या फक्त Code.gs मध्ये आहेत आणि मंजुरीनंतरच मिळतात.
 var APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyqMSreKmJG_V9mi4DG7DDO75X5FeTRSyTcfAmlkiuzmQlEO6LMLxphgXZcZ0KIU282mA/exec';
 
-function gpShowDownloads(){
-  document.getElementById('gpVerifyCard').style.display = 'none';
-  document.getElementById('gpDownloadList').style.display = 'block';
-}
-
-// आधी एकदा फॉर्म भरला असेल तर पुन्हा दाखवायची गरज नाही
-(function(){
-  try{
-    if(localStorage.getItem('gpDownloadVerified') === '1'){ gpShowDownloads(); }
-  }catch(e){}
-})();
+var gpLetter = null;
+function $(i){ return document.getElementById(i); }
+function show(id, on){ $(id).style.display = on ? 'block' : 'none'; }
+function gpMsg(t, ok){ var m=$('gpFormMsg'); m.className='form-msg '+(ok?'ok':'err'); m.textContent=t; m.style.display='block'; }
 
 function gpDesigChanged(){
-  var sel = document.getElementById('gpDesignation');
-  var other = document.getElementById('gpDesignationOther');
-  other.style.display = (sel.value === '__other') ? 'block' : 'none';
-  if(sel.value !== '__other') other.value = '';
+  var v = $('gpDesignation').value;
+  $('gpDesignationOther').style.display = (v === '__other') ? 'block' : 'none';
+  if(v !== '__other') $('gpDesignationOther').value = '';
+}
+function gpShowStatus(){ show('gpVerifyCard', false); show('gpStatusCard', true); }
+function gpShowForm(){ show('gpStatusCard', false); show('gpVerifyCard', true); }
+
+function gpPick(inp){
+  var f = inp.files && inp.files[0];
+  if(!f) return;
+  if(!(f.type.indexOf('image/') === 0 || f.type === 'application/pdf')){ gpMsg('फक्त फोटो किंवा PDF जोडा.', false); return; }
+  if(f.size > 8*1024*1024){ gpMsg('फाईल 8 MB पेक्षा मोठी आहे — लहान फोटो/PDF जोडा.', false); return; }
+  gpLetter = f;
+  $('gpLetterName').textContent = '✅ ' + f.name + ' जोडली';
+  $('gpFormMsg').style.display = 'none';
+}
+
+// फोटो लहान करून (max 1600px, JPEG) base64 मध्ये बदलतो; PDF जशीच्या तशी
+function gpReadLetter(f){
+  return new Promise(function(res, rej){
+    if(f.type === 'application/pdf'){
+      var r = new FileReader();
+      r.onload = function(){ res({name:f.name, mime:f.type, data:String(r.result).split(',')[1]}); };
+      r.onerror = rej; r.readAsDataURL(f); return;
+    }
+    var img = new Image(), url = URL.createObjectURL(f);
+    img.onload = function(){
+      var k = Math.min(1, 1600/Math.max(img.width, img.height));
+      var c = document.createElement('canvas');
+      c.width = Math.round(img.width*k); c.height = Math.round(img.height*k);
+      c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+      URL.revokeObjectURL(url);
+      res({name:'letter.jpg', mime:'image/jpeg', data:c.toDataURL('image/jpeg', 0.8).split(',')[1]});
+    };
+    img.onerror = rej; img.src = url;
+  });
 }
 
 function gpSubmitVerify(){
-  var name = document.getElementById('gpName').value.trim();
-  var taluka = document.getElementById('gpTaluka').value.trim();
-  var district = document.getElementById('gpDistrict').value.trim();
-  var mobile = document.getElementById('gpMobile').value.trim();
-  var personName = document.getElementById('gpPersonName').value.trim();
-  var desigSel = document.getElementById('gpDesignation').value;
-  var designation = (desigSel === '__other') ? document.getElementById('gpDesignationOther').value.trim() : desigSel;
-  var declared = document.getElementById('gpDeclare').checked;
-  var referralName = document.getElementById('gpReferralName').value.trim();
-  var referralMobile = document.getElementById('gpReferralMobile').value.trim();
-  var msg = document.getElementById('gpFormMsg');
-  var btn = document.getElementById('gpSubmitBtn');
-  var mobileOk = /^[0-9]{10}$/.test(mobile);
-  // रेफरल मोबाईल ऐच्छिक आहे — भरला असेल तरच 10 अंकी असणं तपासायचं
-  var referralMobileOk = (referralMobile === '') || /^[0-9]{10}$/.test(referralMobile);
-
-  msg.className = 'form-msg';
-  msg.style.display = 'none';
-
-  if(!name || !taluka || !district || !personName || !designation || !mobileOk){
-    msg.className = 'form-msg err';
-    msg.textContent = 'कृपया सर्व रकाने बरोबर भरा (नाव, पदनाम आणि 10 अंकी मोबाईल नंबर आवश्यक).';
-    msg.style.display = 'block';
-    return;
+  var g = function(i){ return $(i).value.trim(); };
+  var sel = $('gpDesignation').value;
+  var designation = (sel === '__other') ? g('gpDesignationOther') : sel;
+  var mobile = g('gpMobile'), refMobile = g('gpReferralMobile');
+  if(!g('gpName') || !g('gpTaluka') || !g('gpDistrict') || !g('gpPersonName') || !designation || !/^[0-9]{10}$/.test(mobile)){
+    return gpMsg('कृपया सर्व रकाने बरोबर भरा (10 अंकी मोबाईल नंबर आवश्यक).', false);
   }
+  if(!gpLetter) return gpMsg('ग्रामपंचायतीच्या letterhead वरील पत्र (सही-शिक्क्यासह) जोडणे आवश्यक आहे.', false);
+  if(!$('gpDeclare').checked) return gpMsg('पुढे जाण्यासाठी वरील घोषणेवर ✔ करा.', false);
+  if(refMobile && !/^[0-9]{10}$/.test(refMobile)) return gpMsg('रेफरल मोबाईल नंबर भरला असल्यास तो 10 अंकी हवा.', false);
 
-  if(!declared){
-    msg.className = 'form-msg err';
-    msg.textContent = 'हे सॉफ्टवेअर फक्त ग्रामपंचायतींसाठी आहे — पुढे जाण्यासाठी वरील घोषणेवर ✔ करा.';
-    msg.style.display = 'block';
-    return;
-  }
-
-  if(!referralMobileOk){
-    msg.className = 'form-msg err';
-    msg.textContent = 'रेफरल मोबाईल नंबर भरला असल्यास तो 10 अंकी हवा.';
-    msg.style.display = 'block';
-    return;
-  }
-
-  btn.disabled = true;
-  btn.textContent = 'पाठवत आहे…';
-
-  try{ localStorage.setItem('gpDownloadVerified','1'); }catch(e){}
-
-  var proceeded = false;
-  function proceedOnce(){
-    if(proceeded) return;
-    proceeded = true;
-    gpShowDownloads();
-  }
-
-  // ── Google Sheet ला थेट पाठवतो (फुकट, कुठलीही महिन्याची मर्यादा नाही) ──
-  // Apps Script Web App चा प्रतिसाद ब्राऊझरला वाचता येत नाही (Google कडूनच
-  // असलेली मर्यादा) — पण प्रतिसाद वाचायची गरजच नाही, फक्त डेटा पोचला की पुरे.
-  var fd = new FormData();
-  fd.append('name', name);
-  fd.append('taluka', taluka);
-  fd.append('district', district);
-  fd.append('mobile', mobile);
-  fd.append('personName', personName);
-  fd.append('designation', designation);
-  fd.append('referralName', referralName);
-  fd.append('referralMobile', referralMobile);
-
-  fetch(APPS_SCRIPT_URL, { method:'POST', mode:'no-cors', body: fd })
-    .then(proceedOnce)
-    .catch(proceedOnce);
-
-  // Apps Script कधी slow असेल तरी वापरकर्ता अडकून राहू नये म्हणून fallback
-  setTimeout(proceedOnce, 4000);
+  var btn = $('gpSubmitBtn');
+  btn.disabled = true; btn.textContent = 'पाठवत आहे…';
+  gpReadLetter(gpLetter).then(function(letter){
+    var body = JSON.stringify({
+      name:g('gpName'), taluka:g('gpTaluka'), district:g('gpDistrict'), personName:g('gpPersonName'),
+      designation:designation, mobile:mobile, referralName:g('gpReferralName'), referralMobile:refMobile, letter:letter
+    });
+    // text/plain = साधी request, CORS अडचण नाही व उत्तर वाचता येते
+    return fetch(APPS_SCRIPT_URL, {method:'POST', headers:{'Content-Type':'text/plain;charset=utf-8'}, body:body});
+  }).then(function(r){ return r.json(); }).then(function(j){
+    if(!j.ok) throw new Error(j.error || 'error');
+    try{ localStorage.setItem('gpReq', JSON.stringify({id:j.id, mobile:mobile})); }catch(e){}
+    $('gpReqId').value = j.id; $('gpReqMobile').value = mobile;
+    gpShowStatus();
+    $('gpStatusText').innerHTML = '✅ अर्ज पाठवला. तुमचा अर्ज क्रमांक: <b>' + j.id + '</b> (लक्षात ठेवा).<br>तपासणीनंतर मंजुरी मिळाल्यावर इथेच Download उघडेल — नंतर या पेजवर येऊन "स्थिती तपासा" दाबा.';
+  }).catch(function(){
+    gpMsg('अर्ज पाठवता आला नाही. इंटरनेट तपासून पुन्हा प्रयत्न करा, किंवा WhatsApp वर पत्र पाठवा.', false);
+  }).then(function(){ btn.disabled = false; btn.textContent = '📩 अर्ज पाठवा'; });
 }
+
+function gpCheckStatus(){
+  var id = $('gpReqId').value.trim().toUpperCase(), mob = $('gpReqMobile').value.trim();
+  var t = $('gpStatusText');
+  if(!id || !/^[0-9]{10}$/.test(mob)){ t.textContent = 'अर्ज क्रमांक व 10 अंकी मोबाईल नंबर भरा.'; return; }
+  var btn = $('gpCheckBtn'); btn.disabled = true; t.textContent = 'तपासत आहे…';
+  fetch(APPS_SCRIPT_URL + '?action=status&id=' + encodeURIComponent(id) + '&mobile=' + encodeURIComponent(mob))
+    .then(function(r){ return r.json(); }).then(function(j){
+      if(j.status === 'Approved'){
+        $('downloadBtn').href = j.links.setup;
+        $('win7DownloadBtn').href = j.links.win7;
+        $('mobileAppBtn').href = j.links.mobile;
+        show('gpStatusCard', false); show('gpDownloadList', true);
+      } else if(j.status === 'Pending'){
+        t.textContent = '⏳ अर्ज तपासणीत आहे. मंजुरी मिळाल्यावर Download उघडेल — थोड्या वेळाने पुन्हा तपासा.';
+      } else if(j.status === 'Rejected'){
+        t.textContent = '❌ अर्ज मंजूर झाला नाही. ' + (j.note || '') + ' कृपया WhatsApp वर संपर्क करा.';
+      } else {
+        t.textContent = 'अर्ज क्रमांक किंवा मोबाईल नंबर जुळत नाही.';
+      }
+    }).catch(function(){ t.textContent = 'स्थिती तपासता आली नाही. पुन्हा प्रयत्न करा.'; })
+    .then(function(){ btn.disabled = false; });
+}
+
+// आधी अर्ज केला असेल तर आपोआप स्थिती तपासा
+(function(){
+  try{
+    var r = JSON.parse(localStorage.getItem('gpReq') || 'null');
+    if(r && r.id){ $('gpReqId').value = r.id; $('gpReqMobile').value = r.mobile; gpShowStatus(); gpCheckStatus(); }
+  }catch(e){}
+})();
 </script>
 </body>
 </html>
