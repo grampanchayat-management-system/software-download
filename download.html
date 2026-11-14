@@ -221,14 +221,15 @@ function gpSubmitVerify(){
     });
     // text/plain = साधी request, CORS अडचण नाही व उत्तर वाचता येते
     return fetch(APPS_SCRIPT_URL, {method:'POST', headers:{'Content-Type':'text/plain;charset=utf-8'}, body:body});
-  }).then(function(r){ return r.json(); }).then(function(j){
-    if(!j.ok) throw new Error(j.error || 'error');
+  }).then(function(r){ return r.text(); }).then(function(t){
+    var j; try{ j = JSON.parse(t); }catch(x){ throw new Error('सर्व्हरचे उत्तर चुकीचे आहे — Apps Script मध्ये नवीन Version Deploy केला आहे का / परवानगी (Allow) दिली आहे का?'); }
+    if(!j.ok || !j.id) throw new Error('सर्व्हर: ' + (j.error || 'जुना कोड चालू आहे — New version Deploy करा'));
     try{ localStorage.setItem('gpReq', JSON.stringify({id:j.id, mobile:mobile})); }catch(e){}
     $('gpReqId').value = j.id; $('gpReqMobile').value = mobile;
     gpShowStatus();
     $('gpStatusText').innerHTML = '✅ अर्ज पाठवला. तुमचा अर्ज क्रमांक: <b>' + j.id + '</b> (लक्षात ठेवा).<br>तपासणीनंतर मंजुरी मिळाल्यावर इथेच Download उघडेल — नंतर या पेजवर येऊन "स्थिती तपासा" दाबा.';
-  }).catch(function(){
-    gpMsg('अर्ज पाठवता आला नाही. इंटरनेट तपासून पुन्हा प्रयत्न करा, किंवा WhatsApp वर पत्र पाठवा.', false);
+  }).catch(function(err){
+    gpMsg('अर्ज पाठवता आला नाही. (' + ((err && err.message) || err) + ') इंटरनेट तपासून पुन्हा प्रयत्न करा, किंवा WhatsApp वर पत्र पाठवा.', false);
   }).then(function(){ btn.disabled = false; btn.textContent = '📩 अर्ज पाठवा'; });
 }
 
